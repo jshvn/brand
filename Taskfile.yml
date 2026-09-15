@@ -1,0 +1,88 @@
+# The brand kit for ijosh.com: one mark, two forms, and every file other repos
+# consume. The SVGs in mark/ are generated from src/marks.mjs; the PNG, ICO and PDF
+# files beside them are rendered from those SVGs inside the toolbox image, and the
+# JPEGs in photo/ are resized from photo/profile.png there too. All of it is
+# committed, so consumers never need the toolchain. `task check` proves the committed
+# files match a fresh build. Rules for using the mark are in README.md.
+version: '3'
+
+vars:
+  IMAGE: jshvn-brand
+  ENGINE:
+    sh: |
+      if [ -n "$ENGINE" ]; then echo "$ENGINE"
+      elif command -v container >/dev/null 2>&1 && container system status >/dev/null 2>&1; then echo container
+      elif command -v docker >/dev/null 2>&1; then echo docker
+      elif command -v container >/dev/null 2>&1; then echo container
+      else echo docker
+      fi
+
+tasks:
+  default:
+    desc: Print the menu
+    silent: true
+    # ponytail: hand-maintained listing -- go-task can neither group nor annotate,
+    # so a new task means a line below. `task --list` stays the generated view.
+    cmds:
+      - |
+        b=$(printf '\033[1m'); c=$(printf '\033[1;36m'); d=$(printf '\033[2m'); r=$(printf '\033[0m')
+        printf '%s\n' \
+          "" \
+          "${b}brand${r}   ${d}the ijosh.com mark and every file other repos consume${r}" \
+          "" \
+          "${c}checks -- offline, changes nothing${r}" \
+          "  task check                Rebuild into a temp dir and diff against mark/ and photo/" \
+          "                            ${d}a diff means a source changed and was not rebuilt${r}" \
+          "" \
+          "${c}build -- rewrites mark/ and photo/${r}" \
+          "  task build                Regenerate mark/, and photo/ from the photo master" \
+          "                            ${d}commit the result; consumers never run this${r}" \
+          "" \
+          "${c}images -- the toolbox${r}" \
+          "  task image                Build the toolbox image ({{.IMAGE}}, {{.ENGINE}})" \
+          "  task run -- <cmd>         Run any command inside it with the repo mounted" \
+          "  task clean                Remove the image and any build scratch" \
+          ""
+
+  check:
+    desc: Rebuild into a temp dir and diff against the committed mark/ and photo/
+    deps: [image]
+    cmds:
+      - rm -rf .build && mkdir -p .build
+      - task: run
+        vars: { CLI_ARGS: sh src/build.sh .build }
+      - diff -rq .build/mark mark
+      - diff -rq .build/photo photo
+      - rm -rf .build
+
+  build:
+    desc: Regenerate every file in mark/ and photo/
+    deps: [image]
+    cmds:
+      - task: run
+        vars: { CLI_ARGS: sh src/build.sh }
+
+  image:
+    desc: Build the toolbox image
+    run: once
+    # Image presence is the freshness check; a Dockerfile edit needs `task clean` first.
+    status:
+      - '{{.ENGINE}} image inspect {{.IMAGE}} >/dev/null 2>&1'
+    cmds:
+      - '{{.ENGINE}} build -t {{.IMAGE}} docker/'
+
+  run:
+    desc: 'Run any command in the toolbox image, e.g. task run -- sh src/build.sh'
+    cmds:
+      - >-
+        {{.ENGINE}} run --rm -i $(test -t 0 && test -t 1 && echo -t || true)
+        --user $(id -u):$(id -g)
+        -v "{{.ROOT_DIR}}":/work -w /work
+        -e HOME=/tmp
+        {{.IMAGE}} {{.CLI_ARGS}}
+
+  clean:
+    desc: Remove the toolbox image and build scratch
+    cmds:
+      - rm -rf .build
+      - '{{.ENGINE}} image rm {{.IMAGE}} >/dev/null 2>&1 || true'
