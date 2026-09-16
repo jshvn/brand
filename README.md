@@ -41,7 +41,7 @@ There are five icon tiles, each a charcoal square holding the on-dark mark.
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
 | **Icon, solid** | `jshvn-icon-solid.svg` | Rounded, with the solid mark. Favicons at 16 and 32px. |
 
-And five wide images: a profile banner for each of four platforms, and the preview
+And six wide images: a profile banner for each of five platforms, and the preview
 GitHub shows when a repository is linked. Each is at the size its platform asks for.
 
 | Platform | File | Pixels |
@@ -50,6 +50,7 @@ GitHub shows when a repository is linked. Each is at the size its platform asks 
 | **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 | **Discord** | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
+| **Bluesky** | `social/jshvn-banner-bluesky-1500x500.png` | 1500 x 500 |
 | **GitHub** | `social/jshvn-social-preview-1280x640.png` | 1280 x 640 |
 
 A banner is the mark on a charcoal field patterned with the same grid, aligned so the
@@ -60,9 +61,10 @@ rebuild matches the committed files byte for byte.
 
 Upload the PNG. The SVG beside it is the source.
 
-The mark sits in a different place on each. The four profile platforms overlay the
+The mark sits in a different place on each. The five profile platforms overlay the
 avatar on the bottom left and crop the edges, X runs the name and bio along the bottom,
-and Discord hangs the status bubble there, so each mark is placed in the region its
+Discord hangs the status bubble there, and Bluesky crops the top and bottom on the web
+and the sides on a phone, so each mark is placed in the region its
 platform leaves clear. GitHub
 overlays nothing, but a repository link unfurls at 1.91:1, which takes the sides, so that
 mark is centred. Those regions are the `safe` entries in `src/social.mjs`, and the
@@ -143,7 +145,7 @@ from the tree.
 | Your own avatar, anywhere | The photo | [An avatar](#an-avatar) |
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
-| A LinkedIn, Facebook, X or Discord profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
+| A LinkedIn, Facebook, X, Discord or Bluesky profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
 | A link to ijosh.com, unfurling anywhere | The share image | [A share image](#a-share-image) |
 | A repository of mine, linked anywhere | The social preview | [A share image](#a-share-image) |
 | A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
@@ -272,7 +274,7 @@ Upload a raster; no platform accepts SVG.
 
 | Account | File |
 |---|---|
-| Personal (GitHub, LinkedIn, X, Slack) | `photo/profile-1024.jpg` |
+| Personal (GitHub, LinkedIn, X, Bluesky, Facebook, Instagram, Discord, Slack) | `photo/profile-1024.jpg` |
 | Organization, circle crop | `mark/jshvn-icon-circle-1024.png` |
 | Organization, square or rounded crop | `mark/jshvn-icon-1024.png` |
 
@@ -305,17 +307,19 @@ and some strip `<picture>` entirely.
 | Facebook, profile cover | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 | Discord, profile banner | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
+| Bluesky, profile banner | `social/jshvn-banner-bluesky-1500x500.png` | 1500 x 500 |
 
 Discord asks for 680 x 240 at least, in 17:6, and only takes an image banner from Nitro
 accounts. Its file is twice the minimum at the same ratio, so the crop step leaves it whole
 and a high-density screen gets every pixel.
 
-The avatar over the bottom left of all four is the photo, so the banner carries only the
+The avatar over the bottom left of all five is the photo, so the banner carries only the
 mark. `social/` also holds `jshvn-social-preview-1280x640.png`, which is not a profile
 banner -- GitHub has none -- but the preview a repository unfurls with. See
 [A share image](#a-share-image).
 
-Do not reuse a banner on another platform. Each mark is placed for its own platform's
+Do not reuse a banner on another platform, even at the same size: X and Bluesky are both
+1500 x 500 and crop differently. Each mark is placed for its own platform's
 mobile crop and overlays, and on a different platform it can land under the avatar or off
 the edge. For a platform that is missing, add a row to `PLATFORMS` in `src/social.mjs`
 with its canvas and safe region, then run `task build`. The generator errors if the mark
@@ -461,8 +465,8 @@ stylesheet cannot drift from the artwork.
 The photo in `photo/` is the other half of the identity.
 
 - **The face where someone expects to meet a person.** Avatars on personal accounts:
-  GitHub, LinkedIn, Instagram, X, Slack, the sender photo in email. A logo there reads as
-  a company.
+  GitHub, LinkedIn, Instagram, X, Bluesky, Slack, the sender photo in email. A logo there
+  reads as a company.
 - **The mark where someone expects to meet the work.** Favicons, READMEs, the resume,
   cards, signatures, organization accounts, and anything printed. A face on a resume is
   a liability.
