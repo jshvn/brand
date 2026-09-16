@@ -9,7 +9,7 @@
 
 <p align="center">The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other repos consume.</p>
 
-This repository is the source of truth for the personal mark, and it serves every file
+This repository is the source of truth for the personal mark and the palette, and it serves every file
 at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those URLs and
 hold no copies; a push here is live everywhere within five minutes.
 
@@ -40,6 +40,38 @@ And in three containers, each a charcoal tile holding the on-dark mark.
 | **Icon, circle** | `jshvn-icon-circle.svg` | Circle with the mark at 74%. Any avatar that is a circle. |
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
 | **Icon, solid** | `jshvn-icon-solid.svg` | Rounded tile with the solid mark. Favicons at 16 and 32px. |
+
+And in three banners, one per platform, each at the pixel size that platform asks for.
+
+| Platform | File | Pixels |
+|---|---|---|
+| **LinkedIn** | `social/jshvn-banner-linkedin-1584x396.png` | 1584 x 396 |
+| **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
+| **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
+
+A banner is the mark on a charcoal field of its own grid, extended and registered so the
+mark's nine grid positions land on lattice positions. It is not the mark set on a
+pattern; it is the lattice, lit.
+
+Each cell of the field takes one of four tones of its own. They are not the mark's pair
+and not the print greys: a shade on charcoal is a different job from ink on paper, and a
+name that means "survives a photocopier" must not quietly come to mean "one of the
+squares". The brightest is the off-white the mark is drawn in, so the field and the mark
+agree at the top of the range and part below it.
+
+Which tone a cell takes is a hash of where that cell sits, not a draw from a generator.
+There is no seed and no state, so it does not depend on the order cells are drawn: the
+field reads as scattered, the same cell is the same tone on every machine forever, and
+`task check` still proves a rebuild matches the committed files byte for byte.
+
+Upload the PNG, which all three take. The SVG beside each is the source, same name
+without the size.
+
+Where the mark sits on each is not taste. All three platforms lay the avatar over the
+bottom-left of the banner and crop the edges differently on mobile, and X runs the name
+and bio across the bottom, so each mark is placed in the region its platform leaves
+alone. Those regions are the `safe` entries in `src/social.mjs`, and the generator
+refuses to write a banner whose mark and clear space fall outside one.
 
 The photo is the other half of the identity, and it is not the mark.
 `photo/profile.png` is the master. The JPEGs beside it are the same crop at smaller
@@ -76,22 +108,26 @@ reaches every consumer without any of them redeploying; that is the point of ser
 
 Three things about the origin that are not obvious from the outside:
 
-- `/mark/*` is crawlable by search engines on purpose, and must stay so. `ijosh.com`'s
-  favicon candidates live there, and Google requires that it can crawl a favicon it is
-  to use. `src/_headers` and `src/robots.txt` say why in place.
-- The index page and `/photo/*` are `noindex`. A search for the name should find
-  `ijosh.com`, not this.
+- `/mark/*` and `/tokens.css` are crawlable by search engines on purpose, and `/mark/*`
+  must stay so. `ijosh.com`'s favicon candidates live there, and Google requires that it
+  can crawl a favicon it is to use. `src/_headers` and `src/robots.txt` say why in place.
+  The line is what another site needs in order to draw itself; a stylesheet is on that
+  side of it, which is why `/tokens.css` is not restricted either.
+- The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
+  find `ijosh.com`, not this. Nothing crawls a profile banner in order to render it, so
+  `/social/*` has no reason to make the exception `/mark/*` makes.
 - Nothing here needs CORS. `<img>`, `<link rel="icon">` and manifest icons are no-cors
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
 
-`task check:urls` fetches every file in `mark/` and `photo/` from the live origin and
-asserts status, content type, cache policy and the robots headers.
+`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/` and `photo/`
+from the live origin and asserts status, content type, cache policy and the robots
+headers.
 
 ## Using it
 
 Find your surface, take the file, follow the recipe. Every recipe uses files straight
-out of `mark/`; nothing is re-exported, re-traced, or redrawn.
+out of the tree; nothing is re-exported, re-traced, or redrawn.
 
 | Where | What goes there | Recipe |
 |---|---|---|
@@ -103,7 +139,8 @@ out of `mark/`; nothing is re-exported, re-traced, or redrawn.
 | Your own avatar, anywhere | The photo, not the mark | [An avatar](#an-avatar) |
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
-| A slide, a poster, a LinkedIn banner | The mark on a flat field | [A slide, a poster, a banner](#a-slide-a-poster-a-banner) |
+| A LinkedIn, Facebook or X profile banner | The banner for that platform, already made | [A profile banner](#a-profile-banner) |
+| A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
 | Embroidery, engraving, vinyl, a stamp | The solid form, 8mm minimum | [Something in one ink](#something-in-one-ink) |
 | A terminal, or ASCII art | The solid form | [A terminal](#a-terminal) |
 | Anything not listed | Whatever [the rules](#the-rules) name | Add a row here when you find out |
@@ -260,15 +297,33 @@ ignore the media query, and a few strip the `<picture>` element outright.
      alt="Josh Vaughen" width="36" height="36">
 ```
 
-### A slide, a poster, a banner
+### A profile banner
+
+`social/` holds one banner per platform, already drawn at the size that platform asks
+for. Upload the PNG. There is nothing to place, crop or resize.
+
+| Platform | File | Pixels |
+|---|---|---|
+| LinkedIn, profile background | `social/jshvn-banner-linkedin-1584x396.png` | 1584 x 396 |
+| Facebook, profile cover | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
+| X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
+
+The avatar that sits over the bottom-left of all three is the photo, so the banner
+carries the mark alone.
+
+Do not hand one of these to another platform. The mark is placed for the mobile crop and
+the overlays of the platform the file is named for, and the same picture on a different
+one walks the mark under an avatar or off the edge. For a platform not listed, add a row
+to `PLATFORMS` in `src/social.mjs` with that platform's canvas and safe region, then run
+`task build`; nothing else needs editing, and the generator will refuse the row if the
+mark and its clear space do not fit what you declared.
+
+### A slide or a poster
 
 The mark goes on a flat charcoal or a flat white field, at 32px or 8mm minimum, with a
 cell of clear space. On a photographic or gradient background, put the solid form in a
 charcoal tile, or use `mark/jshvn-icon.svg` and let the tile do the work. Never key the
 mark straight over an image.
-
-A LinkedIn banner is this case: the mark on a charcoal field. If the banner becomes a
-photograph, the mark goes solid.
 
 ### Something in one ink
 
@@ -329,8 +384,12 @@ laser toner and on a photocopier, where `#414141` on `#999999` still separates.
 
 The site accent, pink `#ca486d`, is never one of those tones. It stays on links, the
 hover state, and the Safari pinned-tab tint, so the mark stays quiet and the accent stays
-rare. All color tokens are in [tokens.css](tokens.css) as a reference copy; the live
-source is `assets/css/style.css` in jshvn/ijosh.com.
+rare. All color tokens are in [tokens.css](tokens.css), which is generated and is the palette:
+every color ijosh.com paints is defined there and nowhere else, and it is served at
+`https://brand.ijosh.com/tokens.css` so a consumer keeps no copy in its own source. Read
+it at build time and inline the values; a cross-origin `@import` puts this origin on the
+consumer's render path for twenty lines of CSS. The mark's two tones in it come from `src/marks.mjs`, so they
+cannot drift from the artwork.
 
 ### Size and space
 
@@ -354,6 +413,8 @@ The photo in `photo/` is the other half of the identity, and the two never compe
   of place, and a face on a resume is a liability.
 - **Both, when the surface is large enough:** the website and the share image. The photo
   is the larger element and the mark is the signature.
+- **A profile page is already both.** The avatar is the photo, so the banner above it
+  carries the mark and nothing else. `social/` holds one per platform.
 
 Keep one photo across every account, cropped the same way, and change it everywhere at
 once or nowhere. `photo/profile.png` is the master; replace it, run `task build`, and
@@ -369,15 +430,21 @@ every rung below it follows.
 
 ## Building
 
-The SVGs are generated by `src/marks.mjs` and every PNG, ICO and PDF is rendered from
-them inside a pinned Alpine image with librsvg and ImageMagick. The photo ladder is
-resized from `photo/profile.png` in the same image. Outputs are committed, so consumers
-never run this.
+The SVGs in `mark/` come from `src/marks.mjs`, those in `social/` from
+`src/social.mjs`, which imports the grid, the drawing and the tones rather than restating
+any of them, and `tokens.css` from `src/tokens.mjs` and those same tones. None of the
+three writes anything: each exports what it stands for, and `src/build.mjs` is the one
+place that puts generated text on disk. `src/build.sh` runs it, then renders everything
+that needs librsvg or ImageMagick -- the PNGs, the ICO, the PDFs and the photo ladder --
+inside a pinned Alpine image. Outputs are committed, so consumers never run this.
+
+`src/marks.mjs` is the one place the grid and the tones are written down. Everything
+else derives from it, so a redraw is an edit to that file and a `task build`.
 
 ```sh
 task          # the menu
-task build    # regenerate mark/
-task check    # prove mark/ and photo/ match a fresh build
+task build    # regenerate mark/, social/ and tokens.css
+task check    # prove mark/, social/ and photo/ match a fresh build
 ```
 
 The host needs [go-task](https://taskfile.dev) and a container engine: Apple

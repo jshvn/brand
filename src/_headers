@@ -7,8 +7,13 @@
 # /mark/* carries no X-Robots-Tag on purpose. ijosh.com's favicon candidates live there,
 # and Google requires that Googlebot-Image be able to crawl a favicon it is to use.
 # Whether it would still use a noindex image is undocumented; the favicon is the reason
-# this origin exists, so it is not risked. The index page and the photos are noindex --
-# a search for the name should return ijosh.com, not this.
+# this origin exists, so it is not risked. /tokens.css is unrestricted for the same
+# reason: ijosh.com imports it, and Google is explicit that a page it cannot fetch the
+# CSS for renders wrong. The line is what another site needs in order to draw itself.
+#
+# The index page, the banners and the photos are noindex -- a search for the name should
+# return ijosh.com, not this. Nothing fetches a profile banner to render a page with, so
+# /social/* has no reason to make the exception /mark/* and /tokens.css make.
 
 /
   X-Robots-Tag: noindex
@@ -18,7 +23,16 @@
   Cache-Control: public, max-age=300
   X-Content-Type-Options: nosniff
 
+/social/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+
 /mark/*
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+
+/tokens.css
   Cache-Control: public, max-age=300
   X-Content-Type-Options: nosniff
 

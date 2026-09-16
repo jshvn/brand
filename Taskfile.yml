@@ -1,9 +1,10 @@
 # The brand kit for ijosh.com: one mark, two forms, and every file other repos
-# consume. The SVGs in mark/ are generated from src/marks.mjs; the PNG, ICO and PDF
-# files beside them are rendered from those SVGs inside the toolbox image, and the
-# JPEGs in photo/ are resized from photo/profile.png there too. All of it is
-# committed, so consumers never need the toolchain. `task check` proves the committed
-# files match a fresh build. Rules for using the mark are in README.md.
+# consume. The SVGs in mark/ are generated from src/marks.mjs and those in social/ from
+# src/social.mjs; the PNG, ICO and PDF files beside them are rendered from those SVGs
+# inside the toolbox image, and the JPEGs in photo/ are resized from photo/profile.png
+# there too. All of it is committed, so consumers never need the toolchain. `task check`
+# proves the committed files match a fresh build. Rules for using the mark are in
+# README.md.
 #
 # Everything is served at brand.ijosh.com by a Cloudflare Pages project that builds
 # from main with `sh src/stage-site.sh`. Consumers link to those URLs; nothing is
@@ -36,15 +37,15 @@ tasks:
           "${b}brand${r}   ${d}the ijosh.com mark and every file other repos consume${r}" \
           "" \
           "${c}checks -- offline, changes nothing${r}" \
-          "  task check                Rebuild into a temp dir and diff against mark/ and photo/" \
+          "  task check                Rebuild into a temp dir and diff against the committed tree" \
           "                            ${d}a diff means a source changed and was not rebuilt${r}" \
           "" \
           "${c}checks -- reaches the live origin${r}" \
-          "  task check:urls           Every file in mark/ and photo/ is served at {{.ORIGIN}}" \
+          "  task check:urls           Every file in mark/, social/ and photo/ is served at {{.ORIGIN}}" \
           "                            ${d}status, content type, cache policy, robots; ORIGIN= to point elsewhere${r}" \
           "" \
-          "${c}build -- rewrites mark/ and photo/${r}" \
-          "  task build                Regenerate mark/, and photo/ from the photo master" \
+          "${c}build -- rewrites mark/, social/ and photo/${r}" \
+          "  task build                Regenerate mark/ and social/, and photo/ from its master" \
           "                            ${d}commit the result; consumers never run this${r}" \
           "" \
           "${c}site -- what Pages serves at brand.ijosh.com${r}" \
@@ -58,18 +59,29 @@ tasks:
           ""
 
   check:
-    desc: Rebuild into a temp dir and diff against the committed mark/ and photo/
+    desc: Rebuild into a temp dir, diff it against the committed tree, and check the page's links
     deps: [image]
     cmds:
       - rm -rf .build && mkdir -p .build
       - task: run
         vars: { CLI_ARGS: sh src/build.sh .build }
       - diff -rq .build/mark mark
+      - diff -rq .build/social social
       - diff -rq .build/photo photo
+      - diff .build/tokens.css tokens.css
+      # The index page is hand-written and the files it points at are generated, so that
+      # seam is where a rename goes stale. Only the three asset directories are checked:
+      # the page also shows a /favicon.ico example for a consumer's own site root.
+      - |
+        fail=0
+        for f in $(grep -o '"/\(mark/\|social/\|photo/\|tokens\.css\)[^"]*"' src/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
+          [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
+        done
+        exit "$fail"
       - rm -rf .build
 
   check:urls:
-    desc: Assert every file in mark/ and photo/ is served at ORIGIN with the right headers
+    desc: Assert every served file is at ORIGIN with the right headers
     silent: true
     env:
       ORIGIN: '{{.ORIGIN}}'
@@ -101,6 +113,7 @@ tasks:
         type_for() {
           case "$1" in
             *.svg) echo 'image/svg\+xml' ;;   *.png) echo 'image/png' ;;
+            *.css) echo 'text/css' ;;
             *.jpg) echo 'image/jpeg' ;;       *.pdf) echo 'application/pdf' ;;
             *.ico) echo 'image/(vnd\.microsoft\.icon|x-icon)' ;;
             *) echo '.' ;;
@@ -108,13 +121,15 @@ tasks:
         }
         probe /            'text/html'  no  noindex
         probe /robots.txt  'text/plain' no  any
+        probe /tokens.css  'text/css'   yes none
         for f in $(find mark -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
+        for f in $(find social -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
         exit "$fail"
 
   build:
-    desc: Regenerate every file in mark/ and photo/
+    desc: Regenerate every file in mark/, social/ and photo/, and tokens.css
     deps: [image]
     cmds:
       - task: run

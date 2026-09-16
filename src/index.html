@@ -62,6 +62,9 @@
   .swatch img { display: block; width: 96px; height: 96px; margin: 0 auto .5rem; }
   .swatch.light img { background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid var(--rule); }
   .swatch.dark img  { background: var(--tile); padding: 16px; border-radius: 12px; }
+  .banner { margin: 1rem 0; }
+  .banner img { display: block; width: 100%; height: auto; border-radius: 6px; }
+  .banner figcaption { color: var(--muted); font-size: .85rem; margin-top: .5rem; }
   ul { padding-left: 1.25rem; }
   li { margin: .25rem 0; }
   #theme {
@@ -82,7 +85,7 @@
     <img class="on-light" src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
     <img class="on-dark" src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen" width="112" height="112">
     <h1>brand</h1>
-    <p class="lede">The mark for Josh Vaughen and ijosh.com, and every file other sites link to. Paths here mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>. Link to these URLs; do not copy the files.</p>
+    <p class="lede">The mark for Josh Vaughen and ijosh.com, and every file other sites link to. Paths here mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>, and so on for <code>social/</code> and <code>photo/</code>. Link to these URLs; do not copy the files.</p>
   </header>
 
   <h2>The mark</h2>
@@ -142,6 +145,28 @@
     <tr><td><a href="/photo/profile-256.jpg">profile-256.jpg</a></td><td>256</td></tr>
     <tr><td><a href="/photo/profile-128.jpg">profile-128.jpg</a></td><td>128</td></tr>
     <tr><td><a href="/photo/profile-64.jpg">profile-64.jpg</a></td><td>64</td></tr>
+  </table>
+
+  <h2>The banners</h2>
+  <p>One profile banner per platform, at the pixel size that platform asks for. The mark sits on a charcoal field of its own grid, extended &mdash; it is not set on a pattern, it is the lattice, lit. Each is placed where that platform neither crops it nor covers it: all three put the avatar over the bottom-left, and X runs the name and bio across the bottom on mobile. The avatar beside these is the photo.</p>
+  <p>The field's cells take one of four tones of their own, chosen by a hash of where each cell sits. That is not a random draw &mdash; there is no seed and no state, so the field reads as scattered while the same cell stays the same tone in every build. The four are the field's, not the mark's and not the print greys.</p>
+  <figure class="banner">
+    <img src="/social/jshvn-banner-linkedin-1584x396.png" alt="Josh Vaughen" width="1584" height="396">
+    <figcaption>linkedin, 1584&times;396</figcaption>
+  </figure>
+  <table>
+    <tr><th>File</th><th>Pixels</th><th>Use</th></tr>
+    <tr><td><a href="/social/jshvn-banner-linkedin-1584x396.png">jshvn-banner-linkedin-1584x396.png</a></td><td>1584&times;396</td><td>The LinkedIn profile background.</td></tr>
+    <tr><td><a href="/social/jshvn-banner-facebook-851x315.png">jshvn-banner-facebook-851x315.png</a></td><td>851&times;315</td><td>The Facebook profile cover.</td></tr>
+    <tr><td><a href="/social/jshvn-banner-x-1500x500.png">jshvn-banner-x-1500x500.png</a></td><td>1500&times;500</td><td>The X profile header.</td></tr>
+  </table>
+  <p>Upload the PNG; every one of these takes it. The SVG beside each is the source, same name without the size.</p>
+
+  <h2>The palette</h2>
+  <p>Every color the site paints, as custom properties, in a light and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's own two tones, read from the artwork that draws them, so they cannot drift from it. Take the values at build time and inline them; a cross-origin <code>@import</code> puts this origin on your render path for twenty lines of CSS.</p>
+  <table>
+    <tr><th>File</th><th>Use</th></tr>
+    <tr><td><a href="/tokens.css">tokens.css</a></td><td>The palette. The source for every color on ijosh.com.</td></tr>
   </table>
 
   <h2>The rules that matter</h2>
