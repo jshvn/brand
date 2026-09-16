@@ -14,8 +14,8 @@ at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those 
 hold no copies; a push here is live everywhere within five minutes.
 
 [What's here](#whats-here) - [Where it is served](#where-it-is-served) -
-[Using it](#using-it) - [The rules](#the-rules) - [Building](#building) -
-[License](#license)
+[Using it](#using-it) - [The palette](#the-palette) - [The rules](#the-rules) -
+[Building](#building) - [License](#license)
 
 ## What's here
 
@@ -338,6 +338,56 @@ The solid form, drawn as five block characters on the grid. The two tones have n
 equivalent in a terminal cell, so do not try to approximate the grey with a dimmer
 color.
 
+## The palette
+
+Every color ijosh.com paints is a custom property in [tokens.css](tokens.css), in one
+light block and one dark. The file is generated from `src/tokens.mjs`, committed, and
+served at `https://brand.ijosh.com/tokens.css`. A site that wants a color reads it
+there; it keeps no copy of its own, and it invents no color of its own.
+
+| Token | Light | Dark | What it paints |
+|---|---|---|---|
+| `--bg` | `#ffffff` | `#17191c` | The page. The dark value is the charcoal the icon tiles are drawn on, so a tile sits flush on a dark page with no edge. |
+| `--text` | `#333333` | `#f4f7fb` | Headings, and anything read first. The dark value is the mark's off-white. |
+| `--text-body` | `#4b5563` | `#c6d0da` | Running text. |
+| `--text-muted` | `#6b7280` | `#9aa7b4` | Captions, dates, the lede, anything secondary. |
+| `--icon` | `#000000` | `#f4f7fb` | Line icons set in text. |
+| `--accent` | `#ca486d` | `#e98aa3` | Links, the hover state, the focus ring, the Safari pinned-tab tint. Nothing else. |
+| `--pill-bg` | `rgba(51, 51, 51, 0.1)` | `rgba(255, 255, 255, 0.1)` | Tags and pills: a tenth of the text color laid over the page. |
+| `--btn-bg`, `--btn-fg` | `#1c1c1c`, `#ffffff` | `#f4f7fb`, `#14171c` | The one filled button, and its label. |
+| `--mark`, `--mark-muted` | `#17191c`, `#666666` | `#f4f7fb`, `#9c9ea2` | The mark's two tones. Read from `src/marks.mjs`, not restated, so they cannot drift from the artwork. |
+
+Read the table this way. The greys are the palette: a page is a light or a charcoal
+surface, text in three weights on it, and the mark in the tones that surface calls for.
+The accent is the one color, and it is rare on purpose: it marks what can be clicked
+and nothing else, so a link stays findable and the mark stays quiet. The two mark tokens
+are for the one case the files in `mark/` cannot cover, an inlined SVG or a mark drawn
+in CSS; every file already carries them.
+
+### Using the palette
+
+**Read it at build time and inline the values.** Fetch `tokens.css` in your build, or
+paste the block into your stylesheet, and check the copy against the origin the same way
+`favicon.ico` is checked. Do not `@import` it: a cross-origin stylesheet puts this
+origin on your render path for twenty lines of CSS, and a consumer that cannot draw
+until brand.ijosh.com answers has taken on a dependency the mark never asked for.
+
+**Let the theme follow the reader.** The dark block applies under
+`prefers-color-scheme: dark` unless `<html>` carries `data-theme="light"`, and applies
+regardless when it carries `data-theme="dark"`. That is the whole contract for a theme
+toggle: set the attribute and every token follows, `--mark` included. Do not write a
+second dark block of your own.
+
+**Paint with the tokens, not the values.** `color: var(--text)` moves with the theme;
+`color: #333333` does not, and it will be the one line that stays dark when the reader
+switches. If a surface needs a color the table does not name, the color is added to
+`src/tokens.mjs` and `task build` is run, and it reaches every consumer at once. That is
+the same rule as the mark: one source, no copies.
+
+**The accent is for links.** Not headings, not borders, not a brand-colored button, and
+never the mark. A page that paints the accent twice on the same screen has used it once
+too often.
+
 ## The rules
 
 ### Which form
@@ -384,13 +434,8 @@ laser toner and on a photocopier, where `#414141` on `#999999` still separates.
 
 The site accent, pink `#ca486d`, is never one of those tones. It stays on links, the
 hover state, and the Safari pinned-tab tint, so the mark stays quiet and the accent stays
-rare. All color tokens are in [tokens.css](tokens.css), which is generated and is the palette:
-every color ijosh.com paints is defined there and nowhere else, and it is served at
-`https://brand.ijosh.com/tokens.css` so a consumer keeps no copy in its own source. Read
-it at build time and inline the values; a cross-origin `@import` puts this origin on the
-consumer's render path for twenty lines of CSS. The mark's two tones in it come from `src/marks.mjs`, so they
-cannot drift from the artwork. The dark block follows the system preference unless the page
-sets `data-theme="light"` or `"dark"` on `<html>`, which is all a theme toggle has to do.
+rare. Both are tokens in [the palette](#the-palette); the tones are read from
+`src/marks.mjs` there, so the stylesheet cannot drift from the artwork.
 
 ### Size and space
 
