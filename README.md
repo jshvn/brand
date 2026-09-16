@@ -475,16 +475,16 @@ below it follows.
 
 ## Building
 
-`src/marks.mjs` defines the grid, the drawing and the tones. `src/social.mjs`,
-`src/share.mjs` and `src/tokens.mjs` import from it. Each module exports data, and
-`src/build.mjs` is the only thing that writes files. `src/build.sh` runs it, then renders
-the PNGs, the ICO, the PDFs, the photo ladder and the share image with librsvg and
-ImageMagick inside a pinned Alpine image. Outputs are committed, so consumers never run
-this.
+`src/tokens.mjs` defines every color. `src/marks.mjs` defines the grid and the drawing,
+and `src/social.mjs` and `src/share.mjs` place the mark on their canvases through it.
+Each module exports data, and `src/build.mjs` is the only thing that writes files: the
+SVGs and tokens.css, then the PNGs, the ICO, the PDFs, the photo ladder and the share
+image with librsvg and ImageMagick inside a pinned Alpine image. Outputs are committed,
+so consumers never run this.
 
 The share image is the one composite: `src/share.mjs` draws its charcoal half, and the
-build lays the photo master on the square beside it. Its SVG is an intermediate and does
-not survive the build, because half a picture is not a source anyone should be served.
+build lays the photo master on the square beside it. Its SVG is never written, because
+half a picture is not a source anyone should be served.
 
 A redraw is an edit to `src/marks.mjs` and a `task build`.
 

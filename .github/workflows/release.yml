@@ -1,6 +1,5 @@
-# Mirrors every tag on main as a GitHub release named after the tag, with notes
-# from the commit messages since the previous tag (all commits for the first).
-# Tags not reachable from main are skipped; an already-released tag is a no-op.
+# Mirrors every tag on main as a GitHub release, with notes from the commits since the
+# previous tag. Tags not on main are skipped; an already-released tag is a no-op.
 name: release
 
 on:

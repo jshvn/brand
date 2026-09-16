@@ -1,15 +1,5 @@
-# The brand kit for ijosh.com: one mark, two forms, and every file other repos
-# consume. The SVGs in mark/ are generated from src/marks.mjs and those in social/ from
-# src/social.mjs; the PNG, ICO and PDF files beside them are rendered from those SVGs
-# inside the toolbox image, and the JPEGs in photo/ are resized from photo/profile.png
-# there too. share/ is the one composite: src/share.mjs draws its charcoal half and the
-# photo master takes the square beside it. All of it is committed, so consumers never need the toolchain. `task check`
-# proves the committed files match a fresh build. Rules for using the mark are in
-# README.md.
-#
-# Everything is served at brand.ijosh.com by a Cloudflare Pages project that builds
-# from main with `sh site/stage.sh`. Consumers link to those URLs; nothing is
-# copied. `task check:urls` proves the live origin serves what the tree holds.
+# The brand kit for ijosh.com: every file in mark/, social/, share/, photo/ and tokens.css,
+# generated in the toolbox image and committed. Cloudflare Pages serves it at brand.ijosh.com.
 version: '3'
 
 vars:
@@ -28,8 +18,7 @@ tasks:
   default:
     desc: Print the menu
     silent: true
-    # ponytail: hand-maintained listing -- go-task can neither group nor annotate,
-    # so a new task means a line below. `task --list` stays the generated view.
+    # ponytail: hand-maintained menu, since go-task can neither group nor annotate
     cmds:
       - |
         b=$(printf '\033[1m'); c=$(printf '\033[1;36m'); d=$(printf '\033[2m'); r=$(printf '\033[0m')
@@ -66,15 +55,13 @@ tasks:
       - rm -rf .build && mkdir -p .build
       - defer: rm -rf .build
       - task: run
-        vars: { CLI_ARGS: sh src/build.sh .build }
+        vars: { CLI_ARGS: node src/build.mjs .build }
       - diff -rq .build/mark mark
       - diff -rq .build/social social
       - diff -rq .build/share share
       - diff -rq .build/photo photo
       - diff .build/tokens.css tokens.css
-      # The index page is hand-written and the files it points at are generated, so that
-      # seam is where a rename goes stale. Only the three asset directories are checked:
-      # the page also shows a /favicon.ico example for a consumer's own site root.
+      # The page is hand-written and links generated files, so check every link resolves.
       - |
         fail=0
         for f in $(grep -o '"/\(mark/\|social/\|share/\|photo/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
@@ -88,10 +75,8 @@ tasks:
     env:
       ORIGIN: '{{.ORIGIN}}'
     cmds:
-      # One request per file, headers only. Content type is judged by extension family;
-      # ICO is accepted under either name Cloudflare has used for it. /mark/* and
-      # /share/* must carry no X-Robots-Tag and / must -- a copy-paste in _headers breaks
-      # those together, so both directions are asserted.
+      # One request per file, headers only. Robots is asserted both ways so a
+      # copy-paste in _headers is caught.
       - |
         fail=0
         probe() { # path  expected-type-regex  cache(yes|no)  robots(noindex|none|any)
@@ -136,7 +121,7 @@ tasks:
     deps: [image]
     cmds:
       - task: run
-        vars: { CLI_ARGS: sh src/build.sh }
+        vars: { CLI_ARGS: node src/build.mjs }
 
   site:
     desc: Stage the site into public/, exactly as the Pages build does
@@ -159,7 +144,7 @@ tasks:
       - '{{.ENGINE}} build -t {{.IMAGE}} docker/'
 
   run:
-    desc: 'Run any command in the toolbox image, e.g. task run -- sh src/build.sh'
+    desc: 'Run any command in the toolbox image, e.g. task run -- node src/build.mjs'
     cmds:
       - >-
         {{.ENGINE}} run --rm -i $(test -t 0 && test -t 1 && echo -t || true)
