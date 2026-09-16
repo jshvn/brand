@@ -1,0 +1,5 @@
+# brand.ijosh.com serves ijosh.com's favicon. Googlebot-Image must be able to crawl
+# /mark/ or the favicon disappears from search results. Do not disallow it.
+# The index page is kept out of search with X-Robots-Tag in _headers, not here.
+User-agent: *
+Allow: /

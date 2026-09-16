@@ -1,0 +1,28 @@
+# Response headers for brand.ijosh.com. Pages applies these to static assets.
+#
+# Five minutes everywhere: the paths are unversioned, and a redraw must reach every
+# consumer without any of them redeploying. Bandwidth is unlimited on Pages, so there is
+# no reason to cache harder.
+#
+# /mark/* carries no X-Robots-Tag on purpose. ijosh.com's favicon candidates live there,
+# and Google requires that Googlebot-Image be able to crawl a favicon it is to use.
+# Whether it would still use a noindex image is undocumented; the favicon is the reason
+# this origin exists, so it is not risked. The index page and the photos are noindex --
+# a search for the name should return ijosh.com, not this.
+
+/
+  X-Robots-Tag: noindex
+
+/photo/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+
+/mark/*
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
