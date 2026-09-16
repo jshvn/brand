@@ -13,6 +13,10 @@ const PLATFORMS = {
   linkedin: { w: 1584, h: 396, pitch: 48, at: [0.65, 0.45], safe: [162, 48, 1422, 348] },
   // avatar bottom-left; name and bio overlay the bottom on mobile, top and bottom may crop
   x: { w: 1500, h: 500, pitch: 60, at: [0.65, 0.40], safe: [300, 50, 1500, 350] },
+  // 17:6 at twice Discord's 680x240 minimum. Avatar over the bottom-left 42% and the status
+  // bubble along the bottom; the profile view trims about 5% per side. Pitch 60 keeps the
+  // mark above 32px in the 300px popout.
+  discord: { w: 1360, h: 480, pitch: 60, at: [0.65, 0.45], safe: [578, 48, 1292, 408] },
   // GitHub's repo social preview. Link unfurls crop to 1.91:1, so the safe region is the centre.
   github: {
     w: 1280, h: 640, pitch: 72, at: [0.50, 0.50], safe: [64, 0, 1216, 640],

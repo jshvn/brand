@@ -41,7 +41,7 @@ There are five icon tiles, each a charcoal square holding the on-dark mark.
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
 | **Icon, solid** | `jshvn-icon-solid.svg` | Rounded, with the solid mark. Favicons at 16 and 32px. |
 
-And four wide images: a profile banner for each of three platforms, and the preview
+And five wide images: a profile banner for each of four platforms, and the preview
 GitHub shows when a repository is linked. Each is at the size its platform asks for.
 
 | Platform | File | Pixels |
@@ -49,6 +49,7 @@ GitHub shows when a repository is linked. Each is at the size its platform asks 
 | **LinkedIn** | `social/jshvn-banner-linkedin-1584x396.png` | 1584 x 396 |
 | **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
+| **Discord** | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
 | **GitHub** | `social/jshvn-social-preview-1280x640.png` | 1280 x 640 |
 
 A banner is the mark on a charcoal field patterned with the same grid, aligned so the
@@ -59,9 +60,10 @@ rebuild matches the committed files byte for byte.
 
 Upload the PNG. The SVG beside it is the source.
 
-The mark sits in a different place on each. The three profile platforms overlay the
-avatar on the bottom left and crop the edges on mobile, and X runs the name and bio along
-the bottom, so each mark is placed in the region its platform leaves clear. GitHub
+The mark sits in a different place on each. The four profile platforms overlay the
+avatar on the bottom left and crop the edges, X runs the name and bio along the bottom,
+and Discord hangs the status bubble there, so each mark is placed in the region its
+platform leaves clear. GitHub
 overlays nothing, but a repository link unfurls at 1.91:1, which takes the sides, so that
 mark is centred. Those regions are the `safe` entries in `src/social.mjs`, and the
 generator errors if a mark and its clear space would fall outside one.
@@ -141,7 +143,7 @@ from the tree.
 | Your own avatar, anywhere | The photo | [An avatar](#an-avatar) |
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
-| A LinkedIn, Facebook or X profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
+| A LinkedIn, Facebook, X or Discord profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
 | A link to ijosh.com, unfurling anywhere | The share image | [A share image](#a-share-image) |
 | A repository of mine, linked anywhere | The social preview | [A share image](#a-share-image) |
 | A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
@@ -302,8 +304,13 @@ and some strip `<picture>` entirely.
 | LinkedIn, profile background | `social/jshvn-banner-linkedin-1584x396.png` | 1584 x 396 |
 | Facebook, profile cover | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
+| Discord, profile banner | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
 
-The avatar over the bottom left of all three is the photo, so the banner carries only the
+Discord asks for 680 x 240 at least, in 17:6, and only takes an image banner from Nitro
+accounts. Its file is twice the minimum at the same ratio, so the crop step leaves it whole
+and a high-density screen gets every pixel.
+
+The avatar over the bottom left of all four is the photo, so the banner carries only the
 mark. `social/` also holds `jshvn-social-preview-1280x640.png`, which is not a profile
 banner -- GitHub has none -- but the preview a repository unfurls with. See
 [A share image](#a-share-image).
