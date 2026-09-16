@@ -37,7 +37,7 @@
   p { margin: .5rem 0 1rem; }
   a { color: var(--accent); }
   .lede { color: var(--text-muted); margin-top: 0; }
-  header img { width: 112px; height: 112px; }
+  header img { width: 112px; height: 112px; margin: 0 auto; }
   table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
   th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
   th { color: var(--text); font-weight: 600; }
@@ -45,7 +45,7 @@
   code { font: .875em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code); padding: .1em .35em; border-radius: 4px; }
   pre { background: var(--code); padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
   pre code { background: none; padding: 0; }
-  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .swatches { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem 2.75rem; margin: 1rem 0; }
   .swatch { text-align: center; font-size: .85rem; color: var(--text-muted); }
   .swatch img { display: block; width: 96px; height: 96px; margin: 0 auto .5rem; }
   .swatch.light img { background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid var(--rule); }
