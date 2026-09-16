@@ -1,7 +1,9 @@
 // The social banners: one per platform, each at the pixel size that platform asks for.
 // A banner is a charcoal field of the mark's own grid, extended -- GRID scaled up and
 // registered so the mark's nine grid positions land on lattice positions. The mark is
-// not set on a pattern; it is the lattice, lit.
+// not set on a pattern; it is the lattice, lit. Each cell of the field takes one of four
+// tones, chosen by a hash of where that cell is, so the field reads as scattered without
+// being random: the same cell is the same tone in every build, on every machine.
 //
 // A 5x5 block of lattice positions is suppressed around the mark. That is the one-cell
 // clear space the rules require, and it is also what keeps faint cells out of the two
@@ -29,9 +31,27 @@ const PLATFORMS = {
   x: { w: 1500, h: 500, pitch: 60, at: [0.65, 0.40], safe: [300, 50, 1500, 350] },
 };
 
-// off-white this faint on charcoal is about a 15/255 step per channel: legible as a
-// texture, and enough of a step to survive the recompression every platform applies.
-const FIELD_OPACITY = 0.07;
+// The field's own four tones, in a ramp that steps evenly once laid on the charcoal.
+// They are deliberately not the mark's pair and not the print greys: a shade on charcoal
+// is a different job from ink on paper, and a name meaning "survives a photocopier" must
+// not quietly come to mean "one of the squares". The brightest is the off-white the mark
+// is drawn in, so the field and the mark agree at the top of the range and part below it.
+const FIELD = [T.offwhite, '#a8adb5', '#767b82', '#4a4f56'];
+
+// At this strength the four land about six of 255 apart per channel: separate enough to
+// read as a grain, and a big enough step to survive the recompression every platform
+// applies to an upload.
+const FIELD_OPACITY = 0.1;
+
+// Which tone a cell takes is a hash of where the cell is, not a draw from a generator.
+// There is no seed and no state, so it does not depend on the order cells are drawn:
+// add a cell and every other cell keeps the tone it had. The field reads as scattered
+// and rebuilds byte-identical forever, which is what task check needs of it.
+const shade = (i, j) => {
+  let h = Math.imul(i + 0x9e37, 374761393) ^ Math.imul(j + 0x85eb, 668265263);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return FIELD[((h ^ (h >>> 16)) >>> 0) % FIELD.length];
+};
 
 // Every length is the mark's own, scaled by s, so nothing about the grid is restated
 // here. A fractional length would put soft edges on a lattice this regular, so the
@@ -72,18 +92,23 @@ const banner = (p) => {
   const field = [];
   for (const x of axis(g.cx, g, p.pitch, p.w)) {
     for (const y of axis(g.cy, g, p.pitch, p.h)) {
-      const dx = Math.abs(x + g.cell / 2 - g.cx);
-      const dy = Math.abs(y + g.cell / 2 - g.cy);
+      // the cell's position on the lattice, signed, so the field is not mirrored
+      const i = Math.round((x + g.cell / 2 - g.cx) / p.pitch);
+      const j = Math.round((y + g.cell / 2 - g.cy) / p.pitch);
       // The 5x5 of lattice positions centred on the mark is its 3x3 plus one ring of
       // clear space. Nothing is drawn there; the mark's own cells are drawn last.
-      if (Math.round(dx / p.pitch) <= 2 && Math.round(dy / p.pitch) <= 2) continue;
+      if (Math.abs(i) <= 2 && Math.abs(j) <= 2) continue;
+      const dx = Math.abs(x + g.cell / 2 - g.cx);
+      const dy = Math.abs(y + g.cell / 2 - g.cy);
       // What survives is measured against the rule rather than against the line above,
       // so a wrong suppression is caught here instead of agreeing with itself.
       assert(
         !(dx < reach + g.cell / 2 && dy < reach + g.cell / 2),
         'field cell intrudes on the clear space',
       );
-      field.push(`<rect x="${x}" y="${y}" width="${g.cell}" height="${g.cell}" rx="${g.rx}"/>`);
+      field.push(
+        `<rect x="${x}" y="${y}" width="${g.cell}" height="${g.cell}" rx="${g.rx}" fill="${shade(i, j)}"/>`,
+      );
     }
   }
   const [x0, y0, x1, y1] = p.safe;
@@ -95,7 +120,7 @@ const banner = (p) => {
     `<svg xmlns="http://www.w3.org/2000/svg" width="${p.w}" height="${p.h}" ` +
     `viewBox="0 0 ${p.w} ${p.h}" role="img" aria-label="${NAME}">` +
     `<rect width="${p.w}" height="${p.h}" fill="${T.charcoal}"/>` +
-    `<g fill="${T.offwhite}" opacity="${FIELD_OPACITY}">${field.join('')}</g>` +
+    `<g opacity="${FIELD_OPACITY}">${field.join('')}</g>` +
     `<g transform="translate(${g.cx - g.box} ${g.cy - g.box}) scale(${g.s})">` +
     `${mark(T.offwhite, T.mutedOnDark)}</g></svg>\n`
   );

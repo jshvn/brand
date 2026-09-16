@@ -49,11 +49,23 @@ And in three banners, one per platform, each at the pixel size that platform ask
 | **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 
-A banner is the mark on a charcoal field of its own grid, extended: the same 24 pitch,
-20 cell and 4 radius, scaled up and registered so the mark's nine grid positions land on
-lattice positions. It is not the mark set on a pattern; it is the lattice, lit. Upload
-the PNG, which all three take. The SVG beside each is the source, same name without the
-size.
+A banner is the mark on a charcoal field of its own grid, extended and registered so the
+mark's nine grid positions land on lattice positions. It is not the mark set on a
+pattern; it is the lattice, lit.
+
+Each cell of the field takes one of four tones of its own. They are not the mark's pair
+and not the print greys: a shade on charcoal is a different job from ink on paper, and a
+name that means "survives a photocopier" must not quietly come to mean "one of the
+squares". The brightest is the off-white the mark is drawn in, so the field and the mark
+agree at the top of the range and part below it.
+
+Which tone a cell takes is a hash of where that cell sits, not a draw from a generator.
+There is no seed and no state, so it does not depend on the order cells are drawn: the
+field reads as scattered, the same cell is the same tone on every machine forever, and
+`task check` still proves a rebuild matches the committed files byte for byte.
+
+Upload the PNG, which all three take. The SVG beside each is the source, same name
+without the size.
 
 Where the mark sits on each is not taste. All three platforms lay the avatar over the
 bottom-left of the banner and crop the edges differently on mobile, and X runs the name
