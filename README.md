@@ -58,8 +58,10 @@ sizes, for upload forms that cap the pixels, the bytes, or both.
 The weights are for the photo committed today; they move when the photo does. Every
 rung is quality 85 with the metadata stripped.
 
-The PNGs, the ICO and the PDF in `mark/` are rendered from the SVGs, and every JPEG in
-`photo/` from the photo master. See [Building](#building).
+The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and every JPEG in
+`photo/` from the photo master. Every mark form ships as a PDF as well as an SVG, for
+page layouts, LaTeX, and print vendors, so nobody has to export one; the containers do
+not, because a tile is a screen surface. See [Building](#building).
 
 ## Where it is served
 
@@ -185,17 +187,32 @@ which is what a mark is for.
 
 ### A resume
 
-Use `mark/jshvn-mark-resume.pdf` in a page layout or LaTeX, `mark/jshvn-mark-resume.svg`
-in a web or HTML-to-PDF resume. Both carry the print greys, `#414141` on `#999999`,
-which hold on laser toner and photocopies where the screen charcoal fills in.
+Two files, both in the print greys that hold on laser toner and photocopies where the
+screen charcoal fills in. `mark/jshvn-mark-resume.pdf` is two-tone, `#414141` on
+`#999999`, for the mark set beside the name. `mark/jshvn-mark-solid-resume.pdf` is the
+same ink in one tone, for the mark set at icon size, where the lighter cells drop out.
+The `.svg` beside each is for a web or HTML-to-PDF resume.
 
-Place it left of the name, sized to the cap height of the name, with the clear space
-kept between the two. In the footer, beside a page number or a URL, use the solid form
-at text size. Never both greys at footer size, and never the mark in a header and a
-footer on the same page.
+Place the two-tone mark left of the name, sized so the drawing is the cap height of the
+name, with the clear space kept between the two. Set at icon size -- in a contact row
+beside a URL, or in a footer beside a page number -- use the solid file, and centre it
+on the cap band of the text beside it rather than standing it on the baseline: the
+glyphs in such a row are centred, not baseline-aligned, so a mark on the baseline reads
+high as soon as it is taller than the cap height.
+
+Never both greys at icon size, and never the mark in a header and a footer on the same
+page.
+
+The drawing fills units 16 to 84 of the file's 100-unit box, so an `\includegraphics`
+height sets the box, not the drawing, and asking for a cap height gets you a mark 68%
+of one. Divide by 0.68 to go from the drawing you want to the box you ask for, then
+lower the box by 0.16 of itself to stand the drawing on the baseline.
 
 ```latex
-\includegraphics[height=\fontcharht\font`X]{brand/mark/jshvn-mark-resume.pdf}
+% beside the name: drawing = the name's cap height
+\newlength{\markbox}
+\setlength{\markbox}{1.470588\fontcharht\font`X}
+\raisebox{-0.16\markbox}{\includegraphics[height=\markbox]{brand/mark/jshvn-mark-resume.pdf}}
 ```
 
 If the resume is going through an applicant tracking system, keep the name as real text
@@ -207,7 +224,7 @@ Vector only, from `mark/jshvn-mark-on-dark.svg` and `mark/jshvn-mark-on-light.sv
 Charcoal `#17191c` front with the on-dark mark, white back with the on-light mark, the
 mark at 10 to 12mm with one cell of clear space, never inside the trim margin.
 
-Send the printer the SVG or a PDF exported from it, not a PNG, and do not let them
+Send the printer the SVG or the PDF beside it, not a PNG, and do not let them
 re-trace it. For letterpress, foil, engraving, or any process that lays down one ink,
 use [the one-ink recipe](#something-in-one-ink) instead.
 
@@ -297,6 +314,7 @@ a vendor's brand form.
 | A white or light-grey screen | yours, anything white to light grey | `#17191c` near-black | `#666666` mid grey | `jshvn-mark-on-light.svg` |
 | A dark or charcoal screen | yours, anything dark grey to black | `#f4f7fb` off-white | `#9c9ea2` light grey | `jshvn-mark-on-dark.svg` |
 | A printed resume | the white paper | `#414141` soft black | `#999999` mid grey | `jshvn-mark-resume.svg`, `.pdf` |
+| A printed resume, at icon size | the white paper | `#414141` soft black | `#414141`, the same ink | `jshvn-mark-solid-resume.svg`, `.pdf` |
 | An app icon, favicon, or avatar | `#17191c` charcoal, drawn into the file | `#f4f7fb` off-white | `#9c9ea2` light grey | `jshvn-icon*.svg` |
 
 Read the rows this way. **The background** is the surface the mark sits on; the mark
@@ -317,7 +335,10 @@ source is `assets/css/style.css` in jshvn/ijosh.com.
 ### Size and space
 
 - Clear space is one cell, 24 units, on every side. Nothing else enters it.
-- Minimum size: mark 32px or 8mm, solid 16px or 4mm.
+- Minimum size: mark 32px or 8mm, solid 16px or 4mm. The floor is about what
+  survives reproduction, so it binds on screens, on anything rastered, and on every
+  one-ink process. Vector artwork in a PDF has no such floor: the solid form set as
+  an icon in a contact row prints clean at the cap height of the text beside it.
 - In a circle, the mark is 74% of the diameter. `jshvn-icon-circle.svg` does this.
 - The bars are cells joined; they keep the cell radius. Never round them further.
 

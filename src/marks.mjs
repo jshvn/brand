@@ -31,6 +31,7 @@ const files = {
   'jshvn-mark-solid-on-light.svg':  svg(solid(T.charcoal), 'Josh Vaughen'),
   'jshvn-mark-solid-on-dark.svg':   svg(solid(T.offwhite), 'Josh Vaughen'),
   'jshvn-mark-resume.svg':          svg(mark(T.resumeInk, T.resumeGrey), 'Josh Vaughen'),
+  'jshvn-mark-solid-resume.svg':    svg(solid(T.resumeInk), 'Josh Vaughen'),
   // containers: the mark in a charcoal tile
   'jshvn-icon.svg':                 svg(tile(mark(T.offwhite, T.mutedOnDark), 22), 'Josh Vaughen'),
   'jshvn-icon-square.svg':          svg(tile(mark(T.offwhite, T.mutedOnDark), 0), 'Josh Vaughen'),
