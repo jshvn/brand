@@ -74,14 +74,14 @@ tasks:
       # the page also shows a /favicon.ico example for a consumer's own site root.
       - |
         fail=0
-        for f in $(grep -o '"/\(mark\|social\|photo\)/[^"]*"' src/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
+        for f in $(grep -o '"/\(mark/\|social/\|photo/\|tokens\.css\)[^"]*"' src/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
           [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
         done
         exit "$fail"
       - rm -rf .build
 
   check:urls:
-    desc: Assert every file in mark/, social/ and photo/ is served at ORIGIN with the right headers
+    desc: Assert every served file is at ORIGIN with the right headers
     silent: true
     env:
       ORIGIN: '{{.ORIGIN}}'
@@ -113,6 +113,7 @@ tasks:
         type_for() {
           case "$1" in
             *.svg) echo 'image/svg\+xml' ;;   *.png) echo 'image/png' ;;
+            *.css) echo 'text/css' ;;
             *.jpg) echo 'image/jpeg' ;;       *.pdf) echo 'application/pdf' ;;
             *.ico) echo 'image/(vnd\.microsoft\.icon|x-icon)' ;;
             *) echo '.' ;;
@@ -120,6 +121,7 @@ tasks:
         }
         probe /            'text/html'  no  noindex
         probe /robots.txt  'text/plain' no  any
+        probe /tokens.css  'text/css'   yes none
         for f in $(find mark -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         for f in $(find social -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done

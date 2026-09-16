@@ -161,6 +161,13 @@
   </table>
   <p>Upload the PNG; every one of these takes it. The SVG beside each is the source, same name without the size.</p>
 
+  <h2>The palette</h2>
+  <p>Every color the site paints, as custom properties, in a light and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's own two tones, read from the artwork that draws them, so they cannot drift from it. Take the values at build time and inline them; a cross-origin <code>@import</code> puts this origin on your render path for twenty lines of CSS.</p>
+  <table>
+    <tr><th>File</th><th>Use</th></tr>
+    <tr><td><a href="/tokens.css">tokens.css</a></td><td>The palette. The source for every color on ijosh.com.</td></tr>
+  </table>
+
   <h2>The rules that matter</h2>
   <ul>
     <li>The two-tone mark on white, light grey, charcoal or black, at 32px or 8mm and up. Everything else gets the solid form.</li>

@@ -96,9 +96,11 @@ reaches every consumer without any of them redeploying; that is the point of ser
 
 Three things about the origin that are not obvious from the outside:
 
-- `/mark/*` is crawlable by search engines on purpose, and must stay so. `ijosh.com`'s
-  favicon candidates live there, and Google requires that it can crawl a favicon it is
-  to use. `src/_headers` and `src/robots.txt` say why in place.
+- `/mark/*` and `/tokens.css` are crawlable by search engines on purpose, and `/mark/*`
+  must stay so. `ijosh.com`'s favicon candidates live there, and Google requires that it
+  can crawl a favicon it is to use. `src/_headers` and `src/robots.txt` say why in place.
+  The line is what another site needs in order to draw itself; a stylesheet is on that
+  side of it, which is why `/tokens.css` is not restricted either.
 - The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
   find `ijosh.com`, not this. Nothing crawls a profile banner in order to render it, so
   `/social/*` has no reason to make the exception `/mark/*` makes.
@@ -106,8 +108,9 @@ Three things about the origin that are not obvious from the outside:
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
 
-`task check:urls` fetches every file in `mark/`, `social/` and `photo/` from the live
-origin and asserts status, content type, cache policy and the robots headers.
+`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/` and `photo/`
+from the live origin and asserts status, content type, cache policy and the robots
+headers.
 
 ## Using it
 
@@ -370,8 +373,10 @@ laser toner and on a photocopier, where `#414141` on `#999999` still separates.
 The site accent, pink `#ca486d`, is never one of those tones. It stays on links, the
 hover state, and the Safari pinned-tab tint, so the mark stays quiet and the accent stays
 rare. All color tokens are in [tokens.css](tokens.css), which is generated and is the palette:
-every color ijosh.com paints is defined there and nowhere else, and the site imports it
-rather than keeping a copy. The mark's two tones in it come from `src/marks.mjs`, so they
+every color ijosh.com paints is defined there and nowhere else, and it is served at
+`https://brand.ijosh.com/tokens.css` so a consumer keeps no copy in its own source. Read
+it at build time and inline the values; a cross-origin `@import` puts this origin on the
+consumer's render path for twenty lines of CSS. The mark's two tones in it come from `src/marks.mjs`, so they
 cannot drift from the artwork.
 
 ### Size and space
