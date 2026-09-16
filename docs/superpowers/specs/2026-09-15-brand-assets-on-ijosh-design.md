@@ -135,19 +135,19 @@ relies on" is folklore and is corrected as part of this work.
 
 ### jshvn/brand
 
-**`src/stage-site.sh`** -- assembles `public/` from the committed tree. Pure `cp` plus
+**`site/stage.sh`** -- assembles `public/` from the committed tree. Pure `cp` plus
 one generated file, so it runs in the Pages build image with no toolbox and no
 dependencies.
 
 ```
-public/index.html   <- src/index.html
+public/index.html   <- site/index.html
 public/mark/        <- mark/
 public/photo/       <- photo/
-public/_headers     <- src/_headers
-public/robots.txt   <- src/robots.txt
+public/_headers     <- site/_headers
+public/robots.txt   <- site/robots.txt
 ```
 
-**`src/index.html`** -- the page at the root. What the mark is, the two forms and the
+**`site/index.html`** -- the page at the root. What the mark is, the two forms and the
 containers, the rules that matter, a table of what to use where, the photo ladder with
 its sizes and weights, and a link to the README for the full text. Self-contained:
 inline CSS, no build step, no framework, and it uses the files beside it, so the page is
@@ -160,7 +160,7 @@ one file most likely to be wanted in a hurry. Its size is a non-issue here -- it
 downloaded deliberately by a person, not embedded in a page, so the five-minute TTL
 never applies to it in practice.
 
-**`src/_headers`** -- Pages supports `_headers` natively.
+**`site/_headers`** -- Pages supports `_headers` natively.
 
 ```
 /
@@ -252,7 +252,7 @@ resource "cloudflare_pages_project" "brand" {
   name              = "brand"
   production_branch = "main"
   build_config = {
-    build_command   = "sh src/stage-site.sh"
+    build_command   = "sh site/stage.sh"
     destination_dir = "public"
     root_dir        = ""
   }

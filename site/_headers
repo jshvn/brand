@@ -21,20 +21,16 @@
 /photo/*
   X-Robots-Tag: noindex
   Cache-Control: public, max-age=300
-  X-Content-Type-Options: nosniff
 
 /social/*
   X-Robots-Tag: noindex
   Cache-Control: public, max-age=300
-  X-Content-Type-Options: nosniff
 
 /mark/*
   Cache-Control: public, max-age=300
-  X-Content-Type-Options: nosniff
 
 /tokens.css
   Cache-Control: public, max-age=300
-  X-Content-Type-Options: nosniff
 
 /*
   X-Frame-Options: DENY

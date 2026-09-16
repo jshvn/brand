@@ -97,7 +97,7 @@ not, because a tile is a screen surface. See [Building](#building).
 
 ## Where it is served
 
-A Cloudflare Pages project builds `main` with `sh src/stage-site.sh` and serves the
+A Cloudflare Pages project builds `main` with `sh site/stage.sh` and serves the
 result at `brand.ijosh.com`. Paths mirror the tree: `mark/jshvn-icon.svg` is
 `https://brand.ijosh.com/mark/jshvn-icon.svg`, and the root is an index page that
 says what each file is for.
@@ -110,7 +110,7 @@ Three things about the origin that are not obvious from the outside:
 
 - `/mark/*` and `/tokens.css` are crawlable by search engines on purpose, and `/mark/*`
   must stay so. `ijosh.com`'s favicon candidates live there, and Google requires that it
-  can crawl a favicon it is to use. `src/_headers` and `src/robots.txt` say why in place.
+  can crawl a favicon it is to use. `site/_headers` and `site/robots.txt` say why in place.
   The line is what another site needs in order to draw itself; a stylesheet is on that
   side of it, which is why `/tokens.css` is not restricted either.
 - The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
@@ -389,7 +389,8 @@ every color ijosh.com paints is defined there and nowhere else, and it is served
 `https://brand.ijosh.com/tokens.css` so a consumer keeps no copy in its own source. Read
 it at build time and inline the values; a cross-origin `@import` puts this origin on the
 consumer's render path for twenty lines of CSS. The mark's two tones in it come from `src/marks.mjs`, so they
-cannot drift from the artwork.
+cannot drift from the artwork. The dark block follows the system preference unless the page
+sets `data-theme="light"` or `"dark"` on `<html>`, which is all a theme toggle has to do.
 
 ### Size and space
 
