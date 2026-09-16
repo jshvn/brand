@@ -6,7 +6,7 @@ set -eu
 out="${1:-public}"
 rm -rf "$out"
 mkdir -p "$out"
-cp src/index.html src/_headers src/robots.txt "$out/"
+cp site/index.html site/_headers site/robots.txt "$out/"
 cp tokens.css "$out/"
 cp -R mark "$out/mark"
 cp -R social "$out/social"

@@ -7,7 +7,7 @@
 # README.md.
 #
 # Everything is served at brand.ijosh.com by a Cloudflare Pages project that builds
-# from main with `sh src/stage-site.sh`. Consumers link to those URLs; nothing is
+# from main with `sh site/stage.sh`. Consumers link to those URLs; nothing is
 # copied. `task check:urls` proves the live origin serves what the tree holds.
 version: '3'
 
@@ -63,6 +63,7 @@ tasks:
     deps: [image]
     cmds:
       - rm -rf .build && mkdir -p .build
+      - defer: rm -rf .build
       - task: run
         vars: { CLI_ARGS: sh src/build.sh .build }
       - diff -rq .build/mark mark
@@ -74,11 +75,10 @@ tasks:
       # the page also shows a /favicon.ico example for a consumer's own site root.
       - |
         fail=0
-        for f in $(grep -o '"/\(mark/\|social/\|photo/\|tokens\.css\)[^"]*"' src/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
+        for f in $(grep -o '"/\(mark/\|social/\|photo/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
           [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
         done
         exit "$fail"
-      - rm -rf .build
 
   check:urls:
     desc: Assert every served file is at ORIGIN with the right headers
@@ -138,7 +138,7 @@ tasks:
   site:
     desc: Stage the site into public/, exactly as the Pages build does
     cmds:
-      - sh src/stage-site.sh
+      - sh site/stage.sh
 
   site:serve:
     desc: Stage, then serve public/ locally

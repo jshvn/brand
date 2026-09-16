@@ -11,35 +11,23 @@
   // Before first paint, so a remembered theme never flashes the other one.
   try { if (localStorage.theme) document.documentElement.dataset.theme = localStorage.theme; } catch (e) {}
 </script>
+<link rel="stylesheet" href="/tokens.css">
 <style>
-  :root {
-    color-scheme: light;
-    --bg: #ffffff; --text: #333333; --muted: #6b7280; --body: #4b5563;
-    --accent: #ca486d; --rule: #e5e7eb; --tile: #17191c; --tile-fg: #f4f7fb; --code: #f3f4f6;
-    --on-light: block; --on-dark: none;
-  }
-  /* The system preference, unless the toggle has pinned the page to light. */
+  /* The palette is tokens.css, same origin, so nothing here restates a color it names.
+     These are the page's own: the rule and code surfaces, and the tile a swatch sits on,
+     which is the icon's charcoal in either theme. */
+  :root { --rule: #e5e7eb; --code: #f3f4f6; --tile: #17191c; --on-light: block; --on-dark: none; }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      color-scheme: dark;
-      --bg: #17191c; --text: #f4f7fb; --muted: #9aa7b4; --body: #c6d0da;
-      --accent: #e98aa3; --rule: #2a2d31; --code: #1f2226;
-      --on-light: none; --on-dark: block;
-    }
+    :root:not([data-theme="light"]) { --rule: #2a2d31; --code: #1f2226; --on-light: none; --on-dark: block; }
   }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --bg: #17191c; --text: #f4f7fb; --muted: #9aa7b4; --body: #c6d0da;
-    --accent: #e98aa3; --rule: #2a2d31; --code: #1f2226;
-    --on-light: none; --on-dark: block;
-  }
+  :root[data-theme="dark"] { --rule: #2a2d31; --code: #1f2226; --on-light: none; --on-dark: block; }
   /* Artwork that comes in two cuts. CSS cannot swap an image source, so both ship
      and the theme picks one; display:none keeps the other out of the a11y tree. */
   .on-light { display: var(--on-light); }
   .on-dark { display: var(--on-dark); }
   * { box-sizing: border-box; }
   body {
-    margin: 0; background: var(--bg); color: var(--body);
+    margin: 0; background: var(--bg); color: var(--text-body);
     font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
   main { max-width: 52rem; margin: 0 auto; padding: 3rem 1rem 4rem; }
@@ -48,7 +36,7 @@
   h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
   p { margin: .5rem 0 1rem; }
   a { color: var(--accent); }
-  .lede { color: var(--muted); margin-top: 0; }
+  .lede { color: var(--text-muted); margin-top: 0; }
   header img { width: 112px; height: 112px; }
   table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
   th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
@@ -58,25 +46,25 @@
   pre { background: var(--code); padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
   pre code { background: none; padding: 0; }
   .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; }
-  .swatch { text-align: center; font-size: .85rem; color: var(--muted); }
+  .swatch { text-align: center; font-size: .85rem; color: var(--text-muted); }
   .swatch img { display: block; width: 96px; height: 96px; margin: 0 auto .5rem; }
   .swatch.light img { background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid var(--rule); }
   .swatch.dark img  { background: var(--tile); padding: 16px; border-radius: 12px; }
   .banner { margin: 1rem 0; }
   .banner img { display: block; width: 100%; height: auto; border-radius: 6px; }
-  .banner figcaption { color: var(--muted); font-size: .85rem; margin-top: .5rem; }
+  .banner figcaption { color: var(--text-muted); font-size: .85rem; margin-top: .5rem; }
   ul { padding-left: 1.25rem; }
   li { margin: .25rem 0; }
   #theme {
     position: fixed; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; padding: 0;
     display: grid; place-items: center; cursor: pointer;
-    background: var(--bg); color: var(--muted);
+    background: var(--bg); color: var(--text-muted);
     border: 1px solid var(--rule); border-radius: 50%; box-shadow: 0 1px 3px rgb(0 0 0 / .15);
   }
   #theme:hover { color: var(--text); }
   #theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   #theme[hidden] { display: none; }
-  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); color: var(--text-muted); font-size: .9rem; }
 </style>
 </head>
 <body>
