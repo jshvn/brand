@@ -73,11 +73,11 @@
     <img class="on-light" src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
     <img class="on-dark" src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen" width="112" height="112">
     <h1>brand</h1>
-    <p class="lede">The mark for Josh Vaughen and ijosh.com, and every file other sites link to. Paths here mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>, and so on for <code>social/</code> and <code>photo/</code>. Link to these URLs; do not copy the files.</p>
+    <p class="lede">The mark for Josh Vaughen and ijosh.com, the color palette, and every file other sites link to. Paths mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>, and the same for <code>social/</code> and <code>photo/</code>. Link to these URLs instead of copying the files.</p>
   </header>
 
   <h2>The mark</h2>
-  <p>A J on a three-by-three grid. Two forms: the mark, in two tones, and the solid mark for anywhere the grey cannot be trusted &mdash; mid-tones, photographs, anything under 32px, and every process that prints one ink.</p>
+  <p>A J on a three by three grid, in two forms. The mark uses two tones. The solid mark uses one, for mid-tones, photographs, anything under 32px, and any process that prints a single ink.</p>
   <div class="swatches">
     <figure class="swatch light"><img src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen"><figcaption>mark, on light</figcaption></figure>
     <figure class="swatch dark"><img src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen"><figcaption>mark, on dark</figcaption></figure>
@@ -95,7 +95,7 @@
   <p>Each SVG has a 512 and 1024 PNG beside it, same name with the size appended.</p>
 
   <h2>The icons</h2>
-  <p>A charcoal tile holding the on-dark mark. The tile brings its own background, so the icon reads the same on any page.</p>
+  <p>A charcoal tile holding the on-dark mark. The tile includes its own background, so the icon looks the same on any page.</p>
   <div class="swatches">
     <figure class="swatch"><img src="/mark/jshvn-icon.svg" alt="Josh Vaughen"><figcaption>icon</figcaption></figure>
     <figure class="swatch"><img src="/mark/jshvn-icon-square.svg" alt="Josh Vaughen"><figcaption>square</figcaption></figure>
@@ -115,15 +115,15 @@
   </table>
 
   <h2>On a website</h2>
-  <p>Link the icons from here. Copy only <code>favicon.ico</code> to your site root: browsers probe it on the page's own origin, and it is the one format Google is certain to read.</p>
+  <p>Link the icons from here, and copy <code>favicon.ico</code> to your site root. Browsers request it on the page's own origin, and ICO is a format Google reads for sure.</p>
 <pre><code>&lt;link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48"&gt;
 &lt;link rel="icon" href="https://brand.ijosh.com/mark/jshvn-icon.svg" type="image/svg+xml"&gt;
 &lt;link rel="apple-touch-icon" href="https://brand.ijosh.com/mark/apple-touch-icon-180.png"&gt;
 &lt;link rel="mask-icon" href="https://brand.ijosh.com/mark/safari-pinned-tab.svg" color="#ca486d"&gt;</code></pre>
-  <p>Your page's Content-Security-Policy has to name this origin under <code>img-src</code>. Nothing here needs CORS.</p>
+  <p>Your page's Content-Security-Policy needs this origin under <code>img-src</code>. No CORS headers are needed.</p>
 
   <h2>The photo</h2>
-  <p>The other half of the identity, and not the mark. A face goes where someone expects to meet a person: avatars on personal accounts. The mark goes where someone expects to meet the work. One crop at every size, so the face sits in the same place at each.</p>
+  <p>The other half of the identity. Use the face for avatars on personal accounts, where someone expects to meet a person, and the mark where someone expects to meet the work. Every size is the same crop, so the face sits in the same place at each.</p>
   <table>
     <tr><th>File</th><th>Pixels</th><th>Use</th></tr>
     <tr><td><a href="/photo/profile.png">profile.png</a></td><td>1024</td><td>The master, lossless. The best source when a form takes it.</td></tr>
@@ -136,8 +136,8 @@
   </table>
 
   <h2>The banners</h2>
-  <p>One profile banner per platform, at the pixel size that platform asks for. The mark sits on a charcoal field of its own grid, extended &mdash; it is not set on a pattern, it is the lattice, lit. Each is placed where that platform neither crops it nor covers it: all three put the avatar over the bottom-left, and X runs the name and bio across the bottom on mobile. The avatar beside these is the photo.</p>
-  <p>The field's cells take one of four tones of their own, chosen by a hash of where each cell sits. That is not a random draw &mdash; there is no seed and no state, so the field reads as scattered while the same cell stays the same tone in every build. The four are the field's, not the mark's and not the print greys.</p>
+  <p>One profile banner per platform, at the pixel size that platform asks for. The mark sits on a charcoal field patterned with the same grid, placed where the platform will neither crop it nor cover it. All three put the avatar over the bottom left, and X runs the name and bio along the bottom on mobile. The avatar beside these is the photo.</p>
+  <p>Each field cell takes one of four grey tones, chosen by hashing the cell's position. There is no random seed, so the field looks scattered and every build produces the same file.</p>
   <figure class="banner">
     <img src="/social/jshvn-banner-linkedin-1584x396.png" alt="Josh Vaughen" width="1584" height="396">
     <figcaption>linkedin, 1584&times;396</figcaption>
@@ -148,10 +148,10 @@
     <tr><td><a href="/social/jshvn-banner-facebook-851x315.png">jshvn-banner-facebook-851x315.png</a></td><td>851&times;315</td><td>The Facebook profile cover.</td></tr>
     <tr><td><a href="/social/jshvn-banner-x-1500x500.png">jshvn-banner-x-1500x500.png</a></td><td>1500&times;500</td><td>The X profile header.</td></tr>
   </table>
-  <p>Upload the PNG; every one of these takes it. The SVG beside each is the source, same name without the size.</p>
+  <p>Upload the PNG. The SVG beside each is the source, same name without the size.</p>
 
   <h2>The palette</h2>
-  <p>Every color the site paints, as custom properties, in a light and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's own two tones, read from the artwork that draws them, so they cannot drift from it. Take the values at build time and inline them; a cross-origin <code>@import</code> puts this origin on your render path for twenty lines of CSS.</p>
+  <p>Every color ijosh.com paints, as custom properties, in a light block and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's two tones, read from the artwork so they cannot drift from it. Inline the values at build time. A cross-origin <code>@import</code> blocks your page from rendering until this origin answers.</p>
   <table>
     <tr><th>File</th><th>Use</th></tr>
     <tr><td><a href="/tokens.css">tokens.css</a></td><td>The palette. The source for every color on ijosh.com.</td></tr>
@@ -160,9 +160,9 @@
   <h2>The rules that matter</h2>
   <ul>
     <li>The two-tone mark on white, light grey, charcoal or black, at 32px or 8mm and up. Everything else gets the solid form.</li>
-    <li>One cell of clear space on every side. Nothing enters it.</li>
-    <li>Never pink, never any color, in the mark. The accent lives on links and the pinned-tab tint.</li>
-    <li>Never rotated, mirrored, outlined, shadowed, or laid over a photo or gradient.</li>
+    <li>One cell of clear space on every side.</li>
+    <li>No pink, or any other color, in the mark. The accent is for links and the pinned-tab tint.</li>
+    <li>No rotation, mirroring, outlines, or drop shadows, and never over a photo or gradient.</li>
     <li><code>alt</code> is the name, never "logo".</li>
   </ul>
 

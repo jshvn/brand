@@ -7,11 +7,11 @@
 
 <h1 align="center">brand</h1>
 
-<p align="center">The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other repos consume.</p>
+<p align="center">The mark for Josh Vaughen and ijosh.com, the color palette, and the rules for using them.</p>
 
-This repository is the source of truth for the personal mark and the palette, and it serves every file
-at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those URLs and
-hold no copies; a push here is live everywhere within five minutes.
+This repository is the source of truth for the mark and the palette. Everything in it is
+served at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those
+URLs instead of keeping copies, so a change here is live everywhere within five minutes.
 
 [What's here](#whats-here) - [Where it is served](#where-it-is-served) -
 [Using it](#using-it) - [The palette](#the-palette) - [The rules](#the-rules) -
@@ -19,29 +19,29 @@ hold no copies; a push here is live everywhere within five minutes.
 
 ## What's here
 
-A J built on a three by three grid: 24 unit pitch, 20 unit cells, 4 unit gaps and
-radius, in a 100 unit box. The stem and base are bars. The two cells at the ends of the
-stroke, the serif at the top and the tail of the hook, are set in a lighter tone so the
-letter reads as drawn with a pen that lifts at each end.
+The mark is a J on a three by three grid: 24 unit pitch, 20 unit cells, 4 unit gaps and
+corner radius, in a 100 unit box. The stem and base are solid bars. The two cells at the
+ends of the stroke, the serif at the top and the tip of the tail, are a lighter tone, so
+the letter looks drawn with a pen that lifts at each end.
 
 It comes in two forms.
 
 | Form | File | Use |
 |---|---|---|
 | **Mark** | `jshvn-mark-on-light.svg`, `jshvn-mark-on-dark.svg` | The primary form. Two tones. |
-| **Mark, solid** | `jshvn-mark-solid-on-light.svg`, `jshvn-mark-solid-on-dark.svg` | One tone. Everywhere the grey cannot be trusted. |
+| **Mark, solid** | `jshvn-mark-solid-on-light.svg`, `jshvn-mark-solid-on-dark.svg` | One tone. For anywhere the grey cannot be trusted. |
 
-And in three containers, each a charcoal tile holding the on-dark mark.
+There are five icon tiles, each a charcoal square holding the on-dark mark.
 
-| Container | File | Use |
+| Tile | File | Use |
 |---|---|---|
-| **Icon** | `jshvn-icon.svg` | Rounded tile, 22% radius. App icons, favicons at 48px and above. |
-| **Icon, square** | `jshvn-icon-square.svg` | Square tile. Apple touch icon; iOS rounds it. |
-| **Icon, circle** | `jshvn-icon-circle.svg` | Circle with the mark at 74%. Any avatar that is a circle. |
+| **Icon** | `jshvn-icon.svg` | Rounded, 22% radius. App icons, favicons at 48px and above. |
+| **Icon, square** | `jshvn-icon-square.svg` | Square. Apple touch icon; iOS rounds it. |
+| **Icon, circle** | `jshvn-icon-circle.svg` | Circle with the mark at 74%. Circular avatars. |
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
-| **Icon, solid** | `jshvn-icon-solid.svg` | Rounded tile with the solid mark. Favicons at 16 and 32px. |
+| **Icon, solid** | `jshvn-icon-solid.svg` | Rounded, with the solid mark. Favicons at 16 and 32px. |
 
-And in three banners, one per platform, each at the pixel size that platform asks for.
+And three profile banners, one per platform, at the pixel size each platform asks for.
 
 | Platform | File | Pixels |
 |---|---|---|
@@ -49,33 +49,22 @@ And in three banners, one per platform, each at the pixel size that platform ask
 | **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 
-A banner is the mark on a charcoal field of its own grid, extended and registered so the
-mark's nine grid positions land on lattice positions. It is not the mark set on a
-pattern; it is the lattice, lit.
+A banner is the mark on a charcoal field patterned with the same grid, aligned so the
+mark's nine cells land on grid positions. Each field cell takes one of four grey tones at
+10% opacity, chosen by hashing the cell's position. There is no random seed, so the field
+looks scattered but every build produces identical output, and `task check` can prove a
+rebuild matches the committed files byte for byte.
 
-Each cell of the field takes one of four tones of its own. They are not the mark's pair
-and not the print greys: a shade on charcoal is a different job from ink on paper, and a
-name that means "survives a photocopier" must not quietly come to mean "one of the
-squares". The brightest is the off-white the mark is drawn in, so the field and the mark
-agree at the top of the range and part below it.
+Upload the PNG. The SVG beside it is the source.
 
-Which tone a cell takes is a hash of where that cell sits, not a draw from a generator.
-There is no seed and no state, so it does not depend on the order cells are drawn: the
-field reads as scattered, the same cell is the same tone on every machine forever, and
-`task check` still proves a rebuild matches the committed files byte for byte.
+The mark sits in a different place on each banner. All three platforms overlay the avatar
+on the bottom left and crop the edges on mobile, and X runs the name and bio along the
+bottom, so each mark is placed in the region its platform leaves clear. Those regions are
+the `safe` entries in `src/social.mjs`, and the generator errors if a mark and its clear
+space would fall outside one.
 
-Upload the PNG, which all three take. The SVG beside each is the source, same name
-without the size.
-
-Where the mark sits on each is not taste. All three platforms lay the avatar over the
-bottom-left of the banner and crop the edges differently on mobile, and X runs the name
-and bio across the bottom, so each mark is placed in the region its platform leaves
-alone. Those regions are the `safe` entries in `src/social.mjs`, and the generator
-refuses to write a banner whose mark and clear space fall outside one.
-
-The photo is the other half of the identity, and it is not the mark.
-`photo/profile.png` is the master. The JPEGs beside it are the same crop at smaller
-sizes, for upload forms that cap the pixels, the bytes, or both.
+The photo is the other half of the identity. `photo/profile.png` is the master. The JPEGs
+beside it are the same crop at smaller sizes, for upload forms that cap pixels or bytes.
 
 | File | Pixels | Weight |
 |---|---|---|
@@ -87,73 +76,69 @@ sizes, for upload forms that cap the pixels, the bytes, or both.
 | `profile-128.jpg` | 128 | 3 KB |
 | `profile-64.jpg` | 64 | 1 KB |
 
-The weights are for the photo committed today; they move when the photo does. Every
-rung is quality 85 with the metadata stripped.
+The weights are for the current photo and change when it does. Every JPEG is quality 85
+with metadata stripped.
 
-The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and every JPEG in
-`photo/` from the photo master. Every mark form ships as a PDF as well as an SVG, for
-page layouts, LaTeX, and print vendors, so nobody has to export one; the containers do
-not, because a tile is a screen surface. See [Building](#building).
+The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and the JPEGs in
+`photo/` from the master. Every mark form also ships as a PDF, for page layout, LaTeX and
+print vendors. The icon tiles do not, since they are only for screens. See
+[Building](#building).
 
 ## Where it is served
 
-A Cloudflare Pages project builds `main` with `sh site/stage.sh` and serves the
-result at `brand.ijosh.com`. Paths mirror the tree: `mark/jshvn-icon.svg` is
-`https://brand.ijosh.com/mark/jshvn-icon.svg`, and the root is an index page that
-says what each file is for.
+Cloudflare Pages builds `main` with `sh site/stage.sh` and serves the result at
+`brand.ijosh.com`. Paths mirror the tree: `mark/jshvn-icon.svg` is
+`https://brand.ijosh.com/mark/jshvn-icon.svg`. The root is an index page describing each
+file.
 
-Link to the URLs. Do not vendor the files, do not add this repository as a submodule,
-and do not link to GitHub. Everything is cached for five minutes, so a redraw here
-reaches every consumer without any of them redeploying; that is the point of serving it.
+Link to these URLs. Do not vendor the files, add this repository as a submodule, or link
+to GitHub. Everything is cached for five minutes, so a change here reaches every consumer
+without a redeploy.
 
-Three things about the origin that are not obvious from the outside:
+Three things about the origin worth knowing:
 
-- `/mark/*` and `/tokens.css` are crawlable by search engines on purpose, and `/mark/*`
-  must stay so. `ijosh.com`'s favicon candidates live there, and Google requires that it
-  can crawl a favicon it is to use. `site/_headers` and `site/robots.txt` say why in place.
-  The line is what another site needs in order to draw itself; a stylesheet is on that
-  side of it, which is why `/tokens.css` is not restricted either.
+- `/mark/*` and `/tokens.css` are crawlable. Google only uses a favicon it can crawl, and
+  ijosh.com's favicon candidates live under `/mark/`. The stylesheet is crawlable for
+  the same reason: it is something another site needs in order to draw itself.
+  `site/_headers` and `site/robots.txt` have comments explaining this.
 - The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
-  find `ijosh.com`, not this. Nothing crawls a profile banner in order to render it, so
-  `/social/*` has no reason to make the exception `/mark/*` makes.
-- Nothing here needs CORS. `<img>`, `<link rel="icon">` and manifest icons are no-cors
+  land on `ijosh.com`.
+- There are no CORS headers. `<img>`, `<link rel="icon">` and manifest icons are no-cors
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
 
 `task check:urls` fetches `tokens.css` and every file in `mark/`, `social/` and `photo/`
-from the live origin and asserts status, content type, cache policy and the robots
-headers.
+from the live origin and asserts status, content type, cache policy and robots headers.
 
 ## Using it
 
-Find your surface, take the file, follow the recipe. Every recipe uses files straight
-out of the tree; nothing is re-exported, re-traced, or redrawn.
+Find your surface in the table and follow the recipe. Every recipe uses files straight
+from the tree.
 
 | Where | What goes there | Recipe |
 |---|---|---|
 | A website, its favicons and its share image | The icon set, and the mark at 48px | [A website](#a-website) |
 | Nothing but a favicon | `favicon.ico`, one file | [A favicon, and nothing else](#a-favicon-and-nothing-else) |
-| A GitHub README, or a repo that builds | The mark at 112px, pinned to a tag | [A git repository](#a-git-repository) |
+| A GitHub README, or a repo that builds | The mark at 112px | [A git repository](#a-git-repository) |
 | A resume | The mark in the print greys | [A resume](#a-resume) |
 | A business card, or anything else printed | The mark, vector only | [A business card](#a-business-card) |
-| Your own avatar, anywhere | The photo, not the mark | [An avatar](#an-avatar) |
+| Your own avatar, anywhere | The photo | [An avatar](#an-avatar) |
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
-| A LinkedIn, Facebook or X profile banner | The banner for that platform, already made | [A profile banner](#a-profile-banner) |
+| A LinkedIn, Facebook or X profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
 | A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
 | Embroidery, engraving, vinyl, a stamp | The solid form, 8mm minimum | [Something in one ink](#something-in-one-ink) |
 | A terminal, or ASCII art | The solid form | [A terminal](#a-terminal) |
-| Anything not listed | Whatever [the rules](#the-rules) name | Add a row here when you find out |
+| Anything not listed | Whatever [the rules](#the-rules) say | Add a row here when you find out |
 
 ### A website
 
-Link the icon set from `brand.ijosh.com`. Copy one file, `favicon.ico`, to your own
-site root: browsers probe `/favicon.ico` on the page's origin whatever the tags say, and
-ICO is a format Google reads where SVG is not, so that copy is most likely the icon
-beside your site in a search result. It carries three sizes, the solid tile at 16 and 32
-where the grey would not survive and the two-tone tile at 48, so one file covers a light
-and a dark browser chrome. It is a copy, so it can drift; a check that diffs it against
-`https://brand.ijosh.com/mark/favicon.ico` is worth the three lines.
+Link the icon set from `brand.ijosh.com`, and copy one file, `favicon.ico`, to your own
+site root. Browsers request `/favicon.ico` on the page's origin regardless of the tags,
+and Google reads ICO but not SVG, so that copy is the icon most likely to show beside
+your site in search results. It holds three sizes: the solid tile at 16 and 32, where the
+grey would not survive, and the two-tone tile at 48. A copy can drift, so a check that
+diffs it against `https://brand.ijosh.com/mark/favicon.ico` is worth the three lines.
 
 ```html
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -163,11 +148,11 @@ and a dark browser chrome. It is a copy, so it can drift; a check that diffs it 
 <link rel="manifest" href="/site.webmanifest">
 ```
 
-Keep `/favicon.ico` first: Google documents no precedence between an ICO and a PNG,
-and the ICO is the one whose format it certainly supports.
+Keep `/favicon.ico` first. Google documents no precedence between an ICO and a PNG, and
+ICO is the format it definitely supports.
 
-The Safari pinned tab is the one place the accent pink belongs on the mark's shape: the
-file is a single-color mask and the browser paints it in whatever `color` you name.
+The Safari pinned tab is the one place the accent pink touches the mark. The file is a
+single-color mask and the browser fills it with whatever `color` you name.
 
 ```json
 {
@@ -181,8 +166,8 @@ file is a single-color mask and the browser paints it in whatever `color` you na
 }
 ```
 
-In the page itself the mark is 48px at the top of the content panel, in whichever tone
-matches the scheme:
+In the page itself the mark is 48px at the top of the content, in the tone that matches
+the scheme:
 
 ```html
 <picture>
@@ -191,23 +176,22 @@ matches the scheme:
 </picture>
 ```
 
-For the share image, the one that previews in a link unfurl, the photo takes one half
-and the mark sits on the white half beside it, never over the photo.
+For the share image, the photo takes one half and the mark sits on the white half beside
+it.
 
-The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`.
-`alt` is the name, never "logo".
+The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`. Use
+the name for `alt`, never "logo".
 
 ### A favicon, and nothing else
 
-Copy `https://brand.ijosh.com/mark/favicon.ico` to the site root. That is the whole job
-for a small site: three sizes in one file, both tab themes, no markup beyond the
-browser's default lookup. Add the rest of the block above when the site grows a manifest
-or gets installed.
+Copy `https://brand.ijosh.com/mark/favicon.ico` to the site root. That covers a small
+site: three sizes, both tab themes, no markup. Add the full block above when the site
+gains a manifest or gets installed.
 
 ### A git repository
 
-Link to the SVGs at `brand.ijosh.com`, so the README renders on GitHub, on a mirror,
-and in any viewer that does not resolve relative paths.
+Link the SVGs at `brand.ijosh.com`, so the README renders on GitHub, on mirrors, and in
+viewers that do not resolve relative paths.
 
 ```html
 <p align="center">
@@ -218,32 +202,29 @@ and in any viewer that does not resolve relative paths.
 </p>
 ```
 
-A repository that builds something (ijosh.com, professional) links the same URLs.
-Nothing needs the files in its tree, and a redraw here reaches every README at once,
-which is what a mark is for.
+Repositories that build something (ijosh.com, professional) link the same URLs.
 
 ### A resume
 
-Two files, both in the print greys that hold on laser toner and photocopies where the
-screen charcoal fills in. `mark/jshvn-mark-resume.pdf` is two-tone, `#414141` on
-`#999999`, for the mark set beside the name. `mark/jshvn-mark-solid-resume.pdf` is the
-same ink in one tone, for the mark set at icon size, where the lighter cells drop out.
-The `.svg` beside each is for a web or HTML-to-PDF resume.
+Two files, both in the print greys, which hold up under laser toner and photocopying
+where the screen charcoal fills in. `mark/jshvn-mark-resume.pdf` is two-tone, `#414141`
+on `#999999`, for the mark beside the name. `mark/jshvn-mark-solid-resume.pdf` is the
+same ink in one tone, for icon size, where the lighter cells drop out. Each has an SVG
+beside it for a web or HTML-to-PDF resume.
 
-Place the two-tone mark left of the name, sized so the drawing is the cap height of the
-name, with the clear space kept between the two. Set at icon size -- in a contact row
-beside a URL, or in a footer beside a page number -- use the solid file, and centre it
-on the cap band of the text beside it rather than standing it on the baseline: the
-glyphs in such a row are centred, not baseline-aligned, so a mark on the baseline reads
-high as soon as it is taller than the cap height.
+Place the two-tone mark left of the name, sized so the drawing matches the name's cap
+height, with clear space between them. At icon size, in a contact row beside a URL or in
+a footer beside a page number, use the solid file and centre it on the cap band of the
+text beside it. Glyphs in such a row are centred, so a mark standing on the baseline sits
+too high once it is taller than the cap height.
 
-Never both greys at icon size, and never the mark in a header and a footer on the same
-page.
+Do not use the two-tone mark at icon size, and do not put the mark in both the header
+and the footer of one page.
 
 The drawing fills units 16 to 84 of the file's 100-unit box, so an `\includegraphics`
-height sets the box, not the drawing, and asking for a cap height gets you a mark 68%
-of one. Divide by 0.68 to go from the drawing you want to the box you ask for, then
-lower the box by 0.16 of itself to stand the drawing on the baseline.
+height sets the box and the drawing comes out at 68% of it. Divide the height you want by
+0.68 to get the box height, then lower the box by 0.16 of itself to stand the drawing on
+the baseline.
 
 ```latex
 % beside the name: drawing = the name's cap height
@@ -252,22 +233,22 @@ lower the box by 0.16 of itself to stand the drawing on the baseline.
 \raisebox{-0.16\markbox}{\includegraphics[height=\markbox]{brand/mark/jshvn-mark-resume.pdf}}
 ```
 
-If the resume is going through an applicant tracking system, keep the name as real text
-next to the mark. Parsers read the text and ignore the art.
+If the resume goes through an applicant tracking system, keep the name as real text
+beside the mark. Parsers ignore the art.
 
 ### A business card
 
 Vector only, from `mark/jshvn-mark-on-dark.svg` and `mark/jshvn-mark-on-light.svg`.
 Charcoal `#17191c` front with the on-dark mark, white back with the on-light mark, the
-mark at 10 to 12mm with one cell of clear space, never inside the trim margin.
+mark at 10 to 12mm with one cell of clear space, inside the trim margin.
 
-Send the printer the SVG or the PDF beside it, not a PNG, and do not let them
-re-trace it. For letterpress, foil, engraving, or any process that lays down one ink,
-use [the one-ink recipe](#something-in-one-ink) instead.
+Send the printer the SVG or the PDF beside it, and do not let them retrace it. For
+letterpress, foil, engraving, or any other single-ink process, use
+[the one-ink recipe](#something-in-one-ink).
 
 ### An avatar
 
-Upload a raster, since no platform takes an SVG.
+Upload a raster; no platform accepts SVG.
 
 | Account | File |
 |---|---|
@@ -275,22 +256,19 @@ Upload a raster, since no platform takes an SVG.
 | Organization, circle crop | `mark/jshvn-icon-circle-1024.png` |
 | Organization, square or rounded crop | `mark/jshvn-icon-1024.png` |
 
-A personal account gets the face, not the mark; [Mark or photo](#mark-or-photo) says
-why. The tile is charcoal, so it holds its edge on both a light and a dark platform
-theme without a border.
+A personal account gets the face. [Mark or photo](#mark-or-photo) explains why. The tile
+is charcoal, so it keeps its edge on light and dark themes without a border.
 
-When a form rejects the upload for being too large, in pixels or in bytes, drop to the
-next rung of [the photo ladder](#whats-here) rather than re-exporting one by hand. The
-rungs are the same crop, so the face keeps the same position at every size, and a site
-that shows it at 40px gets the file meant for that, not a 1024 scaled down in the
-browser.
+If a form rejects the upload for size, in pixels or bytes, use the next rung of
+[the photo ladder](#whats-here). The rungs share one crop, so the face stays in the same
+place at every size, and a site that shows it at 40px gets a file made for that.
 
 ### An email signature
 
-Link to `jshvn-mark-on-light-512.png` at `brand.ijosh.com`, at 36px displayed, and set
-`width` and `height` in the HTML so it does not reflow while it loads. Do not link to
-GitHub, do not inline the SVG, and do not try to swap tones for dark mode: most clients
-ignore the media query, and a few strip the `<picture>` element outright.
+Link `jshvn-mark-on-light-512.png` at `brand.ijosh.com`, displayed at 36px, with `width`
+and `height` set so the layout does not shift while it loads. Do not link to GitHub,
+inline the SVG, or try to swap tones for dark mode. Most clients ignore the media query
+and some strip `<picture>` entirely.
 
 ```html
 <img src="https://brand.ijosh.com/mark/jshvn-mark-on-light-512.png"
@@ -299,8 +277,7 @@ ignore the media query, and a few strip the `<picture>` element outright.
 
 ### A profile banner
 
-`social/` holds one banner per platform, already drawn at the size that platform asks
-for. Upload the PNG. There is nothing to place, crop or resize.
+`social/` holds one banner per platform, at that platform's size. Upload the PNG.
 
 | Platform | File | Pixels |
 |---|---|---|
@@ -308,111 +285,97 @@ for. Upload the PNG. There is nothing to place, crop or resize.
 | Facebook, profile cover | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 
-The avatar that sits over the bottom-left of all three is the photo, so the banner
-carries the mark alone.
+The avatar over the bottom left of all three is the photo, so the banner carries only the
+mark.
 
-Do not hand one of these to another platform. The mark is placed for the mobile crop and
-the overlays of the platform the file is named for, and the same picture on a different
-one walks the mark under an avatar or off the edge. For a platform not listed, add a row
-to `PLATFORMS` in `src/social.mjs` with that platform's canvas and safe region, then run
-`task build`; nothing else needs editing, and the generator will refuse the row if the
-mark and its clear space do not fit what you declared.
+Do not reuse a banner on another platform. Each mark is placed for its own platform's
+mobile crop and overlays, and on a different platform it can land under the avatar or off
+the edge. For a platform that is missing, add a row to `PLATFORMS` in `src/social.mjs`
+with its canvas and safe region, then run `task build`. The generator errors if the mark
+and its clear space do not fit the region.
 
 ### A slide or a poster
 
-The mark goes on a flat charcoal or a flat white field, at 32px or 8mm minimum, with a
-cell of clear space. On a photographic or gradient background, put the solid form in a
-charcoal tile, or use `mark/jshvn-icon.svg` and let the tile do the work. Never key the
-mark straight over an image.
+Put the mark on a flat charcoal or flat white field, at 32px or 8mm minimum, with a cell
+of clear space. On a photo or gradient background, use the solid form in a charcoal tile,
+or use `mark/jshvn-icon.svg`.
 
 ### Something in one ink
 
-Embroidery, engraving, etching, vinyl cutting, a rubber stamp, letterpress, foil: every
-process that lays down a single ink or cuts a single shape takes
-`mark/jshvn-mark-solid-on-light.svg`, at 8mm or larger. The end cells carry no meaning
-in one ink, and a two-tone mark sent to one of these comes back as an L.
+Embroidery, engraving, etching, vinyl cutting, stamps, letterpress, foil: any process that
+lays down a single ink or cuts a single shape takes `mark/jshvn-mark-solid-on-light.svg`
+at 8mm or larger. In one ink the end cells carry no meaning, and a two-tone mark comes
+back as an L.
 
 ### A terminal
 
-The solid form, drawn as five block characters on the grid. The two tones have no
-equivalent in a terminal cell, so do not try to approximate the grey with a dimmer
-color.
+The solid form, drawn as five block characters on the grid. Do not approximate the grey
+with a dimmer color.
 
 ## The palette
 
-Every color ijosh.com paints is a custom property in [tokens.css](tokens.css), in one
-light block and one dark. The file is generated from `src/tokens.mjs`, committed, and
-served at `https://brand.ijosh.com/tokens.css`. A site that wants a color reads it
-there; it keeps no copy of its own, and it invents no color of its own.
+Every color ijosh.com paints is a custom property in [tokens.css](tokens.css), in a
+light block and a dark block. The file is generated from `src/tokens.mjs`, committed, and
+served at `https://brand.ijosh.com/tokens.css`. A site that needs a color reads it from
+there and keeps no copy.
 
 | Token | Light | Dark | What it paints |
 |---|---|---|---|
-| `--bg` | `#ffffff` | `#17191c` | The page. The dark value is the charcoal the icon tiles are drawn on, so a tile sits flush on a dark page with no edge. |
-| `--text` | `#333333` | `#f4f7fb` | Headings, and anything read first. The dark value is the mark's off-white. |
+| `--bg` | `#ffffff` | `#17191c` | The page. The dark value is the icon tile charcoal, so a tile sits flush on a dark page. |
+| `--text` | `#333333` | `#f4f7fb` | Headings. The dark value is the mark's off-white. |
 | `--text-body` | `#4b5563` | `#c6d0da` | Running text. |
 | `--text-muted` | `#6b7280` | `#9aa7b4` | Captions, dates, the lede, anything secondary. |
 | `--icon` | `#000000` | `#f4f7fb` | Line icons set in text. |
-| `--accent` | `#ca486d` | `#e98aa3` | Links, the hover state, the focus ring, the Safari pinned-tab tint. Nothing else. |
-| `--pill-bg` | `rgba(51, 51, 51, 0.1)` | `rgba(255, 255, 255, 0.1)` | Tags and pills: a tenth of the text color laid over the page. |
-| `--btn-bg`, `--btn-fg` | `#1c1c1c`, `#ffffff` | `#f4f7fb`, `#14171c` | The one filled button, and its label. |
-| `--mark`, `--mark-muted` | `#17191c`, `#666666` | `#f4f7fb`, `#9c9ea2` | The mark's two tones. Read from `src/marks.mjs`, not restated, so they cannot drift from the artwork. |
+| `--accent` | `#ca486d` | `#e98aa3` | Links, hover states, focus rings, the Safari pinned-tab tint. |
+| `--pill-bg` | `rgba(51, 51, 51, 0.1)` | `rgba(255, 255, 255, 0.1)` | Tags and pills: the text color at 10% over the page. |
+| `--btn-bg`, `--btn-fg` | `#1c1c1c`, `#ffffff` | `#f4f7fb`, `#14171c` | The one filled button and its label. |
+| `--mark`, `--mark-muted` | `#17191c`, `#666666` | `#f4f7fb`, `#9c9ea2` | The mark's two tones, read from `src/marks.mjs` so they cannot drift from the artwork. |
 
-Read the table this way. The greys are the palette: a page is a light or a charcoal
-surface, text in three weights on it, and the mark in the tones that surface calls for.
-The accent is the one color, and it is rare on purpose: it marks what can be clicked
-and nothing else, so a link stays findable and the mark stays quiet. The two mark tokens
-are for the one case the files in `mark/` cannot cover, an inlined SVG or a mark drawn
-in CSS; every file already carries them.
+The greys are the palette: a light or charcoal page, text in three weights, and the mark
+in the tones for that surface. The accent is the only color, and it is deliberately rare
+so links stay findable and the mark stays quiet. The two mark tokens are for an inlined
+SVG or a mark drawn in CSS; every file in `mark/` already carries the tones.
 
 ### Using the palette
 
-**Read it at build time and inline the values.** Fetch `tokens.css` in your build, or
-paste the block into your stylesheet, and check the copy against the origin the same way
-`favicon.ico` is checked. Do not `@import` it: a cross-origin stylesheet puts this
-origin on your render path for twenty lines of CSS, and a consumer that cannot draw
-until brand.ijosh.com answers has taken on a dependency the mark never asked for.
+**Inline the values at build time.** Fetch `tokens.css` in your build, or paste the
+block into your stylesheet, and add a check that diffs the copy against the origin, as
+with `favicon.ico`. Do not `@import` it: a cross-origin stylesheet blocks your page from
+rendering until brand.ijosh.com answers.
 
 **Let the theme follow the reader.** The dark block applies under
-`prefers-color-scheme: dark` unless `<html>` carries `data-theme="light"`, and applies
-regardless when it carries `data-theme="dark"`. That is the whole contract for a theme
-toggle: set the attribute and every token follows, `--mark` included. Do not write a
-second dark block of your own.
+`prefers-color-scheme: dark` unless `<html>` has `data-theme="light"`, and always when it
+has `data-theme="dark"`. A theme toggle only has to set that attribute, and every token
+follows, `--mark` included. Do not write a second dark block of your own.
 
-**Paint with the tokens, not the values.** `color: var(--text)` moves with the theme;
-`color: #333333` does not, and it will be the one line that stays dark when the reader
-switches. If a surface needs a color the table does not name, the color is added to
-`src/tokens.mjs` and `task build` is run, and it reaches every consumer at once. That is
-the same rule as the mark: one source, no copies.
+**Use the tokens, not the values.** `color: var(--text)` follows the theme;
+`color: #333333` stays dark when the reader switches. If a surface needs a color the
+table lacks, add it to `src/tokens.mjs` and run `task build`, so every consumer gets it.
 
-**The accent is for links.** Not headings, not borders, not a brand-colored button, and
-never the mark. A page that paints the accent twice on the same screen has used it once
-too often.
+**Keep the accent on links**, hover states and focus rings. Headings, borders, buttons
+and the mark stay grey.
 
 ## The rules
 
 ### Which form
 
-**Use the mark when the surface is white, off-white, light grey, dark grey, charcoal
-or black, and the mark is 32px or 8mm or larger.** In every other case use the solid
-form. That covers mid-tones, color, photographs, gradients, anything under 32px, and
-every process that prints a single ink: engraving, embroidery, vinyl, stamps, pinned
-tabs.
+Use the two-tone mark on white, off-white, light grey, dark grey, charcoal or black, at
+32px or 8mm and larger. Use the solid form everywhere else: mid-tones, color,
+photographs, gradients, anything under 32px, and every single-ink process such as
+engraving, embroidery, vinyl, stamps and pinned tabs.
 
-The two lighter end cells are what make the mark a J. They disappear on a mid-grey
-surface, and a mark without them is an L. The solid form has no such dependency, so it
-is the fallback for everything the rule does not name.
+The two lighter end cells are what make the mark a J. On a mid-grey surface they
+disappear and the mark reads as an L. The solid form has no such dependency.
 
 ### Color
 
-The mark is drawn in two tones. Most of the J is one strong ink: the stem, the base, and
-the corner that joins them. Two single cells at the ends of the stroke are a lighter
-grey: the serif at the top, and the tip of the tail. Those two are the **end cells**,
-and they are what make the shape read as a J rather than an L.
+The mark uses two tones. The stem, the base and the corner that joins them are one
+strong ink. The serif at the top and the tip of the tail, the **end cells**, are a
+lighter grey.
 
-Every file in `mark/` already has the correct pair of colors drawn into it, so normally
-you pick the file and are done. The table is for the times you have to reproduce the
-mark where a file cannot go: a print shop's spec sheet, a slide master, a CSS variable,
-a vendor's brand form.
+Every file in `mark/` has the right pair drawn in, so normally you pick the file and are
+done. The table is for reproducing the mark where a file cannot go: a print shop's spec
+sheet, a slide master, a CSS variable, a vendor's brand form.
 
 | Where you are putting the mark | The background behind it | Most of the J | The two end cells | File to use |
 |---|---|---|---|---|
@@ -422,70 +385,64 @@ a vendor's brand form.
 | A printed resume, at icon size | the white paper | `#414141` soft black | `#414141`, the same ink | `jshvn-mark-solid-resume.svg`, `.pdf` |
 | An app icon, favicon, or avatar | `#17191c` charcoal, drawn into the file | `#f4f7fb` off-white | `#9c9ea2` light grey | `jshvn-icon*.svg` |
 
-Read the rows this way. **The background** is the surface the mark sits on; the mark
-files are transparent and paint nothing behind themselves, so on the first three rows
-that color is whatever you put there and is your job to get right. On the last row it is
-part of the file, which is the point of the icons: the tile brings its own background, so
-the mark looks the same on any page that hosts it.
+**The background** is the surface behind the mark. The mark files are transparent, so on
+the first three rows that color is yours to supply. The icons include their tile, so they
+look the same on any page.
 
-**Most of the J** and **the two end cells** are the two tones inside the artwork. The
-resume row is softer than the screen rows on purpose: a true near-black fills in under
-laser toner and on a photocopier, where `#414141` on `#999999` still separates.
+The resume greys are softer than the screen tones on purpose. True near-black fills in
+under laser toner and on a photocopier, where `#414141` on `#999999` still separates.
 
-The site accent, pink `#ca486d`, is never one of those tones. It stays on links, the
-hover state, and the Safari pinned-tab tint, so the mark stays quiet and the accent stays
-rare. Both are tokens in [the palette](#the-palette); the tones are read from
-`src/marks.mjs` there, so the stylesheet cannot drift from the artwork.
+The accent pink `#ca486d` is never used in the mark. It appears on links, hover states
+and the Safari pinned-tab tint. Both the tones and the accent are tokens in
+[the palette](#the-palette); the tones are read from `src/marks.mjs` there, so the
+stylesheet cannot drift from the artwork.
 
 ### Size and space
 
-- Clear space is one cell, 24 units, on every side. Nothing else enters it.
-- Minimum size: mark 32px or 8mm, solid 16px or 4mm. The floor is about what
-  survives reproduction, so it binds on screens, on anything rastered, and on every
-  one-ink process. Vector artwork in a PDF has no such floor: the solid form set as
-  an icon in a contact row prints clean at the cap height of the text beside it.
+- Clear space is one cell, 24 units, on every side.
+- Minimum size: mark 32px or 8mm, solid 16px or 4mm. The floor is about what survives
+  reproduction, so it applies to screens, rasters and single-ink processes. Vector
+  artwork in a PDF has no floor; the solid form prints clean at the cap height of the
+  text beside it.
 - In a circle, the mark is 74% of the diameter. `jshvn-icon-circle.svg` does this.
-- The bars are cells joined; they keep the cell radius. Never round them further.
+- The bars keep the cell radius. Do not round them further.
 
 ### Mark or photo
 
-The photo in `photo/` is the other half of the identity, and the two never compete.
+The photo in `photo/` is the other half of the identity.
 
-- **A face where someone expects to meet a person.** Avatars on personal accounts:
-  GitHub, LinkedIn, Instagram, X, Slack, the sender photo in email. People recognize
-  contributors and colleagues by face, and a logo there reads as a company.
+- **The face where someone expects to meet a person.** Avatars on personal accounts:
+  GitHub, LinkedIn, Instagram, X, Slack, the sender photo in email. A logo there reads as
+  a company.
 - **The mark where someone expects to meet the work.** Favicons, READMEs, the resume,
-  cards, signatures, organization accounts, and anything printed. A face there is out
-  of place, and a face on a resume is a liability.
+  cards, signatures, organization accounts, and anything printed. A face on a resume is
+  a liability.
 - **Both, when the surface is large enough:** the website and the share image. The photo
   is the larger element and the mark is the signature.
-- **A profile page is already both.** The avatar is the photo, so the banner above it
-  carries the mark and nothing else. `social/` holds one per platform.
+- **A profile page already has both.** The avatar is the photo, so the banner carries
+  only the mark.
 
-Keep one photo across every account, cropped the same way, and change it everywhere at
-once or nowhere. `photo/profile.png` is the master; replace it, run `task build`, and
-every rung below it follows.
+Keep one photo across every account, with the same crop, and change it everywhere at
+once. `photo/profile.png` is the master; replace it, run `task build`, and every rung
+below it follows.
 
 ### Never
 
 - Pink, or any color, in the mark.
-- Cells added, moved, or recolored independently of the color table above.
+- Cells added, moved, or recolored.
 - The two-tone mark under 32px.
-- Rotated, mirrored, outlined, or with a drop shadow.
+- Rotation, mirroring, outlines, or drop shadows.
 - The mark on a mid-grey, a photo, or a gradient. Use the solid form.
 
 ## Building
 
-The SVGs in `mark/` come from `src/marks.mjs`, those in `social/` from
-`src/social.mjs`, which imports the grid, the drawing and the tones rather than restating
-any of them, and `tokens.css` from `src/tokens.mjs` and those same tones. None of the
-three writes anything: each exports what it stands for, and `src/build.mjs` is the one
-place that puts generated text on disk. `src/build.sh` runs it, then renders everything
-that needs librsvg or ImageMagick -- the PNGs, the ICO, the PDFs and the photo ladder --
-inside a pinned Alpine image. Outputs are committed, so consumers never run this.
+`src/marks.mjs` defines the grid, the drawing and the tones. `src/social.mjs` and
+`src/tokens.mjs` import from it. Each module exports data, and `src/build.mjs` is the
+only thing that writes files. `src/build.sh` runs it, then renders the PNGs, the ICO, the
+PDFs and the photo ladder with librsvg and ImageMagick inside a pinned Alpine image.
+Outputs are committed, so consumers never run this.
 
-`src/marks.mjs` is the one place the grid and the tones are written down. Everything
-else derives from it, so a redraw is an edit to that file and a `task build`.
+A redraw is an edit to `src/marks.mjs` and a `task build`.
 
 ```sh
 task          # the menu
@@ -493,9 +450,8 @@ task build    # regenerate mark/, social/ and tokens.css
 task check    # prove mark/, social/ and photo/ match a fresh build
 ```
 
-The host needs [go-task](https://taskfile.dev) and a container engine: Apple
-`container` on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check`
-forces one.
+The host needs [go-task](https://taskfile.dev) and a container engine: Apple `container`
+on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check` forces one.
 
 ## License
 
