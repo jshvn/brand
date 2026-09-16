@@ -10,9 +10,6 @@
 //
 // The avatar beside these is the photo, so the banner is the mark: see "Mark or photo"
 // in README.md.
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { strict as assert } from 'node:assert';
 import { mark, GRID, NAME, T } from './marks.mjs';
 
@@ -104,12 +101,6 @@ const banner = (p) => {
   );
 };
 
-const files = Object.fromEntries(
+export const files = Object.fromEntries(
   Object.entries(PLATFORMS).map(([name, p]) => [`jshvn-banner-${name}.svg`, banner(p)]),
 );
-
-// output directory from argv, default the repo's social/
-const out = process.argv[2] ?? fileURLToPath(new URL('../social', import.meta.url));
-mkdirSync(out, { recursive: true });
-for (const [name, svgText] of Object.entries(files)) writeFileSync(join(out, name), svgText);
-console.log(`wrote ${Object.keys(files).length} SVGs to ${out}/`);

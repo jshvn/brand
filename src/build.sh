@@ -1,8 +1,8 @@
 #!/bin/sh
-# Runs inside the toolbox image. Regenerates the SVGs, then every raster and PDF
-# derived from them, then the social banners, then tokens.css, then the photo ladder,
-# into the tree given as $1 (default: the repo root, so mark/, social/, tokens.css and
-# photo/ in place).
+# Runs inside the toolbox image. src/build.mjs writes every generated text file -- the
+# SVGs in mark/ and social/, and tokens.css -- and the rest of this script renders what
+# needs librsvg or ImageMagick: the PNGs, the ICO, the PDFs and the photo ladder. All of
+# it lands in the tree given as $1, default the repo root.
 set -eu
 # cairo stamps each PDF with the wall clock unless SOURCE_DATE_EPOCH is set, which
 # would make every build dirty the committed PDF. A fixed epoch keeps the PDF
@@ -10,10 +10,8 @@ set -eu
 export SOURCE_DATE_EPOCH=0
 root="${1:-.}"
 out="$root/mark"; soc="$root/social"; pho="$root/photo"
-mkdir -p "$out" "$soc" "$pho"
-node src/marks.mjs "$out"
-node src/social.mjs "$soc"
-node src/tokens.mjs "$root"
+mkdir -p "$pho"
+node src/build.mjs "$root"
 
 png() { rsvg-convert -w "$3" -h "$3" -o "$out/$2" "$out/$1"; }
 png jshvn-mark-on-light.svg        jshvn-mark-on-light-1024.png        1024

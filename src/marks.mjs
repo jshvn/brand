@@ -2,10 +2,6 @@
 // hook muted) and the solid mark (one tone). Everything in mark/ is generated from here,
 // and src/social.mjs builds the banners from the same grid, the same drawing and the
 // same tones rather than restating any of them.
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 // The grid the mark is measured in, and the only place these numbers are stated. The
 // drawing fills origin to box-origin, so 16 to 84 of the 100, which is why an
 // includegraphics height sets the box and not the drawing -- see the resume recipe.
@@ -45,7 +41,7 @@ const T = {
   resumeInk: '#414141', resumeGrey: '#999999',
 };
 
-const files = {
+export const files = {
   'jshvn-mark-on-light.svg':        svg(mark(T.charcoal, T.mutedOnLight)),
   'jshvn-mark-on-dark.svg':         svg(mark(T.offwhite, T.mutedOnDark)),
   'jshvn-mark-solid-on-light.svg':  svg(solid(T.charcoal)),
@@ -63,17 +59,4 @@ const files = {
   'safari-pinned-tab.svg':          svg(solid('#000000')),
 };
 
-// Run this file to write the SVGs; import it and it writes nothing, so src/social.mjs
-// can set the mark on a banner from the same grid, drawing and tones.
 export { mark, T };
-
-// build.sh invokes this with a relative path, which Node resolves to the same real path
-// import.meta.filename holds. An absolute path containing a symlink would not match, and
-// the failure is silent -- no error, just no files written.
-if (import.meta.filename === process.argv[1]) {
-  // output directory from argv, default the repo's mark/
-  const out = process.argv[2] ?? fileURLToPath(new URL('../mark', import.meta.url));
-  mkdirSync(out, { recursive: true });
-  for (const [name, svgText] of Object.entries(files)) writeFileSync(join(out, name), svgText);
-  console.log(`wrote ${Object.keys(files).length} SVGs to ${out}/`);
-}
