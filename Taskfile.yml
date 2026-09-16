@@ -4,10 +4,15 @@
 # JPEGs in photo/ are resized from photo/profile.png there too. All of it is
 # committed, so consumers never need the toolchain. `task check` proves the committed
 # files match a fresh build. Rules for using the mark are in README.md.
+#
+# Everything is served at brand.ijosh.com by a Cloudflare Pages project that builds
+# from main with `sh src/stage-site.sh`. Consumers link to those URLs; nothing is
+# copied. `task check:urls` proves the live origin serves what the tree holds.
 version: '3'
 
 vars:
   IMAGE: jshvn-brand
+  ORIGIN: '{{.ORIGIN | default "https://brand.ijosh.com"}}'
   ENGINE:
     sh: |
       if [ -n "$ENGINE" ]; then echo "$ENGINE"
@@ -34,9 +39,17 @@ tasks:
           "  task check                Rebuild into a temp dir and diff against mark/ and photo/" \
           "                            ${d}a diff means a source changed and was not rebuilt${r}" \
           "" \
+          "${c}checks -- reaches the live origin${r}" \
+          "  task check:urls           Every file in mark/ and photo/ is served at {{.ORIGIN}}" \
+          "                            ${d}status, content type, cache policy, robots; ORIGIN= to point elsewhere${r}" \
+          "" \
           "${c}build -- rewrites mark/ and photo/${r}" \
           "  task build                Regenerate mark/, and photo/ from the photo master" \
           "                            ${d}commit the result; consumers never run this${r}" \
+          "" \
+          "${c}site -- what Pages serves at brand.ijosh.com${r}" \
+          "  task site                 Stage the site into public/ (what the Pages build runs)" \
+          "  task site:serve           Stage, then serve public/ on http://localhost:8080" \
           "" \
           "${c}images -- the toolbox${r}" \
           "  task image                Build the toolbox image ({{.IMAGE}}, {{.ENGINE}})" \
@@ -55,12 +68,68 @@ tasks:
       - diff -rq .build/photo photo
       - rm -rf .build
 
+  check:urls:
+    desc: Assert every file in mark/ and photo/ is served at ORIGIN with the right headers
+    silent: true
+    env:
+      ORIGIN: '{{.ORIGIN}}'
+    cmds:
+      # One request per file, headers only. Content type is judged by extension family;
+      # ICO is accepted under either name Cloudflare has used for it. /mark/* must carry
+      # no X-Robots-Tag and / must -- a copy-paste in _headers breaks those together, so
+      # both directions are asserted.
+      - |
+        fail=0
+        probe() { # path  expected-type-regex  cache(yes|no)  robots(noindex|none|any)
+          h=$(curl -sS -o /dev/null -D - --max-time 20 "$ORIGIN$1" 2>/dev/null | tr -d '\r') \
+            || { echo "FAIL $1: no response"; fail=1; return; }
+          status=$(printf '%s\n' "$h" | awk 'NR==1{print $2}')
+          ctype=$(printf '%s\n' "$h" | awk -F': ' 'tolower($1)=="content-type"{print $2}')
+          cc=$(printf '%s\n' "$h" | awk -F': ' 'tolower($1)=="cache-control"{print $2}')
+          xr=$(printf '%s\n' "$h" | awk -F': ' 'tolower($1)=="x-robots-tag"{print $2}')
+          [ "$status" = 200 ] || { echo "FAIL $1: status $status"; fail=1; return; }
+          printf '%s' "$ctype" | grep -Eq "$2" || { echo "FAIL $1: content-type '$ctype'"; fail=1; return; }
+          if [ "$3" = yes ]; then
+            printf '%s' "$cc" | grep -q 'max-age=300' || { echo "FAIL $1: cache-control '$cc'"; fail=1; return; }
+          fi
+          case "$4" in
+            noindex) printf '%s' "$xr" | grep -q noindex || { echo "FAIL $1: expected X-Robots-Tag noindex, got '$xr'"; fail=1; return; } ;;
+            none)    [ -z "$xr" ] || { echo "FAIL $1: unexpected X-Robots-Tag '$xr'"; fail=1; return; } ;;
+          esac
+          echo "ok   $1"
+        }
+        type_for() {
+          case "$1" in
+            *.svg) echo 'image/svg\+xml' ;;   *.png) echo 'image/png' ;;
+            *.jpg) echo 'image/jpeg' ;;       *.pdf) echo 'application/pdf' ;;
+            *.ico) echo 'image/(vnd\.microsoft\.icon|x-icon)' ;;
+            *) echo '.' ;;
+          esac
+        }
+        probe /            'text/html'  no  noindex
+        probe /robots.txt  'text/plain' no  any
+        for f in $(find mark -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
+        for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
+        [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
+        exit "$fail"
+
   build:
     desc: Regenerate every file in mark/ and photo/
     deps: [image]
     cmds:
       - task: run
         vars: { CLI_ARGS: sh src/build.sh }
+
+  site:
+    desc: Stage the site into public/, exactly as the Pages build does
+    cmds:
+      - sh src/stage-site.sh
+
+  site:serve:
+    desc: Stage, then serve public/ locally
+    deps: [site]
+    cmds:
+      - python3 -m http.server -d public 8080
 
   image:
     desc: Build the toolbox image
@@ -82,7 +151,7 @@ tasks:
         {{.IMAGE}} {{.CLI_ARGS}}
 
   clean:
-    desc: Remove the toolbox image and build scratch
+    desc: Remove the toolbox image, the staged site and build scratch
     cmds:
-      - rm -rf .build
+      - rm -rf .build public
       - '{{.ENGINE}} image rm {{.IMAGE}} >/dev/null 2>&1 || true'

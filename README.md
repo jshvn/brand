@@ -9,12 +9,13 @@
 
 <p align="center">The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other repos consume.</p>
 
-This repository is the source of truth for the personal mark. Other repositories
-vendor files from `mark/`, add this repository as a submodule pinned to a tag, or
-link to the files by URL. Nothing here is generated at consumption time.
+This repository is the source of truth for the personal mark, and it serves every file
+at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those URLs and
+hold no copies; a push here is live everywhere within five minutes.
 
-[What's here](#whats-here) - [Using it](#using-it) - [The rules](#the-rules) -
-[Building](#building) - [License](#license)
+[What's here](#whats-here) - [Where it is served](#where-it-is-served) -
+[Using it](#using-it) - [The rules](#the-rules) - [Building](#building) -
+[License](#license)
 
 ## What's here
 
@@ -60,6 +61,31 @@ rung is quality 85 with the metadata stripped.
 The PNGs, the ICO and the PDF in `mark/` are rendered from the SVGs, and every JPEG in
 `photo/` from the photo master. See [Building](#building).
 
+## Where it is served
+
+A Cloudflare Pages project builds `main` with `sh src/stage-site.sh` and serves the
+result at `brand.ijosh.com`. Paths mirror the tree: `mark/jshvn-icon.svg` is
+`https://brand.ijosh.com/mark/jshvn-icon.svg`, and the root is an index page that
+says what each file is for.
+
+Link to the URLs. Do not vendor the files, do not add this repository as a submodule,
+and do not link to GitHub. Everything is cached for five minutes, so a redraw here
+reaches every consumer without any of them redeploying; that is the point of serving it.
+
+Three things about the origin that are not obvious from the outside:
+
+- `/mark/*` is crawlable by search engines on purpose, and must stay so. `ijosh.com`'s
+  favicon candidates live there, and Google requires that it can crawl a favicon it is
+  to use. `src/_headers` and `src/robots.txt` say why in place.
+- The index page and `/photo/*` are `noindex`. A search for the name should find
+  `ijosh.com`, not this.
+- Nothing here needs CORS. `<img>`, `<link rel="icon">` and manifest icons are no-cors
+  fetches. A consuming page does need this origin under `img-src` in its
+  Content-Security-Policy.
+
+`task check:urls` fetches every file in `mark/` and `photo/` from the live origin and
+asserts status, content type, cache policy and the robots headers.
+
 ## Using it
 
 Find your surface, take the file, follow the recipe. Every recipe uses files straight
@@ -82,17 +108,24 @@ out of `mark/`; nothing is re-exported, re-traced, or redrawn.
 
 ### A website
 
-Ship the whole icon set. `favicon.ico` carries three sizes on its own, the solid tile at
-16 and 32 where the grey would not survive and the two-tone tile at 48, so one file
-covers a light and a dark browser chrome.
+Link the icon set from `brand.ijosh.com`. Copy one file, `favicon.ico`, to your own
+site root: browsers probe `/favicon.ico` on the page's origin whatever the tags say, and
+ICO is a format Google reads where SVG is not, so that copy is most likely the icon
+beside your site in a search result. It carries three sizes, the solid tile at 16 and 32
+where the grey would not survive and the two-tone tile at 48, so one file covers a light
+and a dark browser chrome. It is a copy, so it can drift; a check that diffs it against
+`https://brand.ijosh.com/mark/favicon.ico` is worth the three lines.
 
 ```html
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
-<link rel="icon" href="/jshvn-icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon-180.png">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ca486d">
+<link rel="icon" href="https://brand.ijosh.com/mark/jshvn-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="https://brand.ijosh.com/mark/apple-touch-icon-180.png">
+<link rel="mask-icon" href="https://brand.ijosh.com/mark/safari-pinned-tab.svg" color="#ca486d">
 <link rel="manifest" href="/site.webmanifest">
 ```
+
+Keep `/favicon.ico` first: Google documents no precedence between an ICO and a PNG,
+and the ICO is the one whose format it certainly supports.
 
 The Safari pinned tab is the one place the accent pink belongs on the mark's shape: the
 file is a single-color mask and the browser paints it in whatever `color` you name.
@@ -100,9 +133,9 @@ file is a single-color mask and the browser paints it in whatever `color` you na
 ```json
 {
   "icons": [
-    { "src": "/jshvn-icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/jshvn-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "/jshvn-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "https://brand.ijosh.com/mark/jshvn-icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "https://brand.ijosh.com/mark/jshvn-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "https://brand.ijosh.com/mark/jshvn-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ],
   "theme_color": "#17191c",
   "background_color": "#ffffff"
@@ -114,47 +147,41 @@ matches the scheme:
 
 ```html
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/mark/jshvn-mark-on-dark.svg">
-  <img src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="48" height="48">
+  <source media="(prefers-color-scheme: dark)" srcset="https://brand.ijosh.com/mark/jshvn-mark-on-dark.svg">
+  <img src="https://brand.ijosh.com/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="48" height="48">
 </picture>
 ```
 
 For the share image, the one that previews in a link unfurl, the photo takes one half
 and the mark sits on the white half beside it, never over the photo.
 
-Serve the SVGs from your own origin, not from GitHub. `alt` is the name, never "logo".
+The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`.
+`alt` is the name, never "logo".
 
 ### A favicon, and nothing else
 
-Copy `mark/favicon.ico` to the site root. That is the whole job for a small site: three
-sizes in one file, both tab themes, no markup beyond the browser's default lookup. Add
-the rest of the block above when the site grows a manifest or gets installed.
+Copy `https://brand.ijosh.com/mark/favicon.ico` to the site root. That is the whole job
+for a small site: three sizes in one file, both tab themes, no markup beyond the
+browser's default lookup. Add the rest of the block above when the site grows a manifest
+or gets installed.
 
 ### A git repository
 
-Link to the SVGs by URL, pinned to a tag, so the README renders on GitHub, on a mirror,
+Link to the SVGs at `brand.ijosh.com`, so the README renders on GitHub, on a mirror,
 and in any viewer that does not resolve relative paths.
 
 ```html
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jshvn/brand/v1.0.0/mark/jshvn-mark-on-dark.svg">
-    <img src="https://raw.githubusercontent.com/jshvn/brand/v1.0.0/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112">
+    <source media="(prefers-color-scheme: dark)" srcset="https://brand.ijosh.com/mark/jshvn-mark-on-dark.svg">
+    <img src="https://brand.ijosh.com/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112">
   </picture>
 </p>
 ```
 
-A repository that builds something (ijosh.com, professional) takes the files instead of
-linking them: add this repository as a submodule pinned to a tag, or vendor the two or
-three files it needs and note the tag in the commit.
-
-```sh
-git submodule add https://github.com/jshvn/brand brand
-git -C brand checkout v1.0.0
-```
-
-Pin the tag either way. An unpinned `main` means a redraw here silently changes every
-README that points at it.
+A repository that builds something (ijosh.com, professional) links the same URLs.
+Nothing needs the files in its tree, and a redraw here reaches every README at once,
+which is what a mark is for.
 
 ### A resume
 
@@ -206,13 +233,13 @@ browser.
 
 ### An email signature
 
-Link to `jshvn-mark-on-light-512.png` served by ijosh.com, at 36px displayed, and set
+Link to `jshvn-mark-on-light-512.png` at `brand.ijosh.com`, at 36px displayed, and set
 `width` and `height` in the HTML so it does not reflow while it loads. Do not link to
 GitHub, do not inline the SVG, and do not try to swap tones for dark mode: most clients
 ignore the media query, and a few strip the `<picture>` element outright.
 
 ```html
-<img src="https://ijosh.com/mark/jshvn-mark-on-light-512.png"
+<img src="https://brand.ijosh.com/mark/jshvn-mark-on-light-512.png"
      alt="Josh Vaughen" width="36" height="36">
 ```
 

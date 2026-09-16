@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>brand</title>
+<meta name="description" content="The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other sites link to.">
+<link rel="icon" href="/mark/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="/mark/jshvn-icon.svg" type="image/svg+xml">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #ffffff; --text: #333333; --muted: #6b7280; --body: #4b5563;
+    --accent: #ca486d; --rule: #e5e7eb; --tile: #17191c; --tile-fg: #f4f7fb; --code: #f3f4f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #17191c; --text: #f4f7fb; --muted: #9aa7b4; --body: #c6d0da;
+      --accent: #e98aa3; --rule: #2a2d31; --code: #1f2226;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--body);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 52rem; margin: 0 auto; padding: 3rem 1rem 4rem; }
+  h1, h2 { color: var(--text); line-height: 1.2; }
+  h1 { font-size: 2rem; margin: 1rem 0 .25rem; }
+  h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+  p { margin: .5rem 0 1rem; }
+  a { color: var(--accent); }
+  .lede { color: var(--muted); margin-top: 0; }
+  header img { display: block; width: 112px; height: 112px; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+  th { color: var(--text); font-weight: 600; }
+  td:first-child { white-space: nowrap; }
+  code { font: .875em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code); padding: .1em .35em; border-radius: 4px; }
+  pre { background: var(--code); padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .swatch { text-align: center; font-size: .85rem; color: var(--muted); }
+  .swatch img { display: block; width: 96px; height: 96px; margin: 0 auto .5rem; }
+  .swatch.light img { background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid var(--rule); }
+  .swatch.dark img  { background: var(--tile); padding: 16px; border-radius: 12px; }
+  ul { padding-left: 1.25rem; }
+  li { margin: .25rem 0; }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="/mark/jshvn-mark-on-dark.svg">
+      <img src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
+    </picture>
+    <h1>brand</h1>
+    <p class="lede">The mark for Josh Vaughen and ijosh.com, and every file other sites link to. Paths here mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>. Link to these URLs; do not copy the files.</p>
+  </header>
+
+  <h2>The mark</h2>
+  <p>A J on a three-by-three grid. Two forms: the mark, in two tones, and the solid mark for anywhere the grey cannot be trusted &mdash; mid-tones, photographs, anything under 32px, and every process that prints one ink.</p>
+  <div class="swatches">
+    <figure class="swatch light"><img src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen"><figcaption>mark, on light</figcaption></figure>
+    <figure class="swatch dark"><img src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen"><figcaption>mark, on dark</figcaption></figure>
+    <figure class="swatch light"><img src="/mark/jshvn-mark-solid-on-light.svg" alt="Josh Vaughen"><figcaption>solid, on light</figcaption></figure>
+    <figure class="swatch dark"><img src="/mark/jshvn-mark-solid-on-dark.svg" alt="Josh Vaughen"><figcaption>solid, on dark</figcaption></figure>
+  </div>
+  <table>
+    <tr><th>File</th><th>Use</th></tr>
+    <tr><td><a href="/mark/jshvn-mark-on-light.svg">jshvn-mark-on-light.svg</a></td><td>The mark on white to light grey.</td></tr>
+    <tr><td><a href="/mark/jshvn-mark-on-dark.svg">jshvn-mark-on-dark.svg</a></td><td>The mark on dark grey to black.</td></tr>
+    <tr><td><a href="/mark/jshvn-mark-solid-on-light.svg">jshvn-mark-solid-on-light.svg</a></td><td>One tone, light surface. Also every one-ink process.</td></tr>
+    <tr><td><a href="/mark/jshvn-mark-solid-on-dark.svg">jshvn-mark-solid-on-dark.svg</a></td><td>One tone, dark surface.</td></tr>
+    <tr><td><a href="/mark/jshvn-mark-resume.svg">jshvn-mark-resume.svg</a>, <a href="/mark/jshvn-mark-resume.pdf">.pdf</a></td><td>Print greys for a resume.</td></tr>
+  </table>
+  <p>Each SVG has a 512 and 1024 PNG beside it, same name with the size appended.</p>
+
+  <h2>The icons</h2>
+  <p>A charcoal tile holding the on-dark mark. The tile brings its own background, so the icon reads the same on any page.</p>
+  <div class="swatches">
+    <figure class="swatch"><img src="/mark/jshvn-icon.svg" alt="Josh Vaughen"><figcaption>icon</figcaption></figure>
+    <figure class="swatch"><img src="/mark/jshvn-icon-square.svg" alt="Josh Vaughen"><figcaption>square</figcaption></figure>
+    <figure class="swatch"><img src="/mark/jshvn-icon-circle.svg" alt="Josh Vaughen"><figcaption>circle</figcaption></figure>
+    <figure class="swatch"><img src="/mark/jshvn-icon-maskable.svg" alt="Josh Vaughen"><figcaption>maskable</figcaption></figure>
+    <figure class="swatch"><img src="/mark/jshvn-icon-solid.svg" alt="Josh Vaughen"><figcaption>solid</figcaption></figure>
+  </div>
+  <table>
+    <tr><th>File</th><th>Use</th></tr>
+    <tr><td><a href="/mark/jshvn-icon.svg">jshvn-icon.svg</a></td><td>Rounded tile. App icons, favicons at 48px and up. <a href="/mark/jshvn-icon-512.png">512</a>, <a href="/mark/jshvn-icon-1024.png">1024</a>.</td></tr>
+    <tr><td><a href="/mark/jshvn-icon-square.svg">jshvn-icon-square.svg</a></td><td>Square tile; iOS rounds it. <a href="/mark/apple-touch-icon-180.png">apple-touch-icon-180.png</a>, <a href="/mark/jshvn-icon-square-512.png">512</a>.</td></tr>
+    <tr><td><a href="/mark/jshvn-icon-circle.svg">jshvn-icon-circle.svg</a></td><td>Any avatar that is a circle. <a href="/mark/jshvn-icon-circle-1024.png">1024</a>.</td></tr>
+    <tr><td><a href="/mark/jshvn-icon-maskable.svg">jshvn-icon-maskable.svg</a></td><td>Android maskable. <a href="/mark/jshvn-icon-maskable-192.png">192</a>, <a href="/mark/jshvn-icon-maskable-512.png">512</a>.</td></tr>
+    <tr><td><a href="/mark/jshvn-icon-solid.svg">jshvn-icon-solid.svg</a></td><td>Favicons at 16 and 32px.</td></tr>
+    <tr><td><a href="/mark/favicon.ico">favicon.ico</a></td><td>Solid at 16 and 32, two-tone at 48, in one file.</td></tr>
+    <tr><td><a href="/mark/safari-pinned-tab.svg">safari-pinned-tab.svg</a></td><td>Single-color mask; Safari paints it. Tint <code>#ca486d</code>.</td></tr>
+  </table>
+
+  <h2>On a website</h2>
+  <p>Link the icons from here. Copy only <code>favicon.ico</code> to your site root: browsers probe it on the page's own origin, and it is the one format Google is certain to read.</p>
+<pre><code>&lt;link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48"&gt;
+&lt;link rel="icon" href="https://brand.ijosh.com/mark/jshvn-icon.svg" type="image/svg+xml"&gt;
+&lt;link rel="apple-touch-icon" href="https://brand.ijosh.com/mark/apple-touch-icon-180.png"&gt;
+&lt;link rel="mask-icon" href="https://brand.ijosh.com/mark/safari-pinned-tab.svg" color="#ca486d"&gt;</code></pre>
+  <p>Your page's Content-Security-Policy has to name this origin under <code>img-src</code>. Nothing here needs CORS.</p>
+
+  <h2>The photo</h2>
+  <p>The other half of the identity, and not the mark. A face goes where someone expects to meet a person: avatars on personal accounts. The mark goes where someone expects to meet the work. One crop at every size, so the face sits in the same place at each.</p>
+  <table>
+    <tr><th>File</th><th>Pixels</th><th>Use</th></tr>
+    <tr><td><a href="/photo/profile.png">profile.png</a></td><td>1024</td><td>The master, lossless. The best source when a form takes it.</td></tr>
+    <tr><td><a href="/photo/profile-1024.jpg">profile-1024.jpg</a></td><td>1024</td><td>GitHub, LinkedIn, X, Slack.</td></tr>
+    <tr><td><a href="/photo/profile-512.jpg">profile-512.jpg</a></td><td>512</td><td rowspan="5">The next rung down when a form caps pixels or bytes.</td></tr>
+    <tr><td><a href="/photo/profile-400.jpg">profile-400.jpg</a></td><td>400</td></tr>
+    <tr><td><a href="/photo/profile-256.jpg">profile-256.jpg</a></td><td>256</td></tr>
+    <tr><td><a href="/photo/profile-128.jpg">profile-128.jpg</a></td><td>128</td></tr>
+    <tr><td><a href="/photo/profile-64.jpg">profile-64.jpg</a></td><td>64</td></tr>
+  </table>
+
+  <h2>The rules that matter</h2>
+  <ul>
+    <li>The two-tone mark on white, light grey, charcoal or black, at 32px or 8mm and up. Everything else gets the solid form.</li>
+    <li>One cell of clear space on every side. Nothing enters it.</li>
+    <li>Never pink, never any color, in the mark. The accent lives on links and the pinned-tab tint.</li>
+    <li>Never rotated, mirrored, outlined, shadowed, or laid over a photo or gradient.</li>
+    <li><code>alt</code> is the name, never "logo".</li>
+  </ul>
+
+  <footer>
+    The full rules, the color table and the build are in the <a href="https://github.com/jshvn/brand#readme">README</a>. Every file here is cached for five minutes, so a change in the repository is live everywhere within that.
+  </footer>
+</main>
+</body>
+</html>
