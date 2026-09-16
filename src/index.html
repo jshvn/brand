@@ -7,19 +7,36 @@
 <meta name="description" content="The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other sites link to.">
 <link rel="icon" href="/mark/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="/mark/jshvn-icon.svg" type="image/svg+xml">
+<script>
+  // Before first paint, so a remembered theme never flashes the other one.
+  try { if (localStorage.theme) document.documentElement.dataset.theme = localStorage.theme; } catch (e) {}
+</script>
 <style>
   :root {
     color-scheme: light;
     --bg: #ffffff; --text: #333333; --muted: #6b7280; --body: #4b5563;
     --accent: #ca486d; --rule: #e5e7eb; --tile: #17191c; --tile-fg: #f4f7fb; --code: #f3f4f6;
+    --on-light: block; --on-dark: none;
   }
+  /* The system preference, unless the toggle has pinned the page to light. */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       color-scheme: dark;
       --bg: #17191c; --text: #f4f7fb; --muted: #9aa7b4; --body: #c6d0da;
       --accent: #e98aa3; --rule: #2a2d31; --code: #1f2226;
+      --on-light: none; --on-dark: block;
     }
   }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17191c; --text: #f4f7fb; --muted: #9aa7b4; --body: #c6d0da;
+    --accent: #e98aa3; --rule: #2a2d31; --code: #1f2226;
+    --on-light: none; --on-dark: block;
+  }
+  /* Artwork that comes in two cuts. CSS cannot swap an image source, so both ship
+     and the theme picks one; display:none keeps the other out of the a11y tree. */
+  .on-light { display: var(--on-light); }
+  .on-dark { display: var(--on-dark); }
   * { box-sizing: border-box; }
   body {
     margin: 0; background: var(--bg); color: var(--body);
@@ -32,7 +49,7 @@
   p { margin: .5rem 0 1rem; }
   a { color: var(--accent); }
   .lede { color: var(--muted); margin-top: 0; }
-  header img { display: block; width: 112px; height: 112px; }
+  header img { width: 112px; height: 112px; }
   table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
   th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
   th { color: var(--text); font-weight: 600; }
@@ -47,16 +64,23 @@
   .swatch.dark img  { background: var(--tile); padding: 16px; border-radius: 12px; }
   ul { padding-left: 1.25rem; }
   li { margin: .25rem 0; }
+  #theme {
+    position: fixed; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; padding: 0;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--bg); color: var(--muted);
+    border: 1px solid var(--rule); border-radius: 50%; box-shadow: 0 1px 3px rgb(0 0 0 / .15);
+  }
+  #theme:hover { color: var(--text); }
+  #theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme[hidden] { display: none; }
   footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/mark/jshvn-mark-on-dark.svg">
-      <img src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
-    </picture>
+    <img class="on-light" src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
+    <img class="on-dark" src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen" width="112" height="112">
     <h1>brand</h1>
     <p class="lede">The mark for Josh Vaughen and ijosh.com, and every file other sites link to. Paths here mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>. Link to these URLs; do not copy the files.</p>
   </header>
@@ -133,5 +157,22 @@
     The full rules, the color table and the build are in the <a href="https://github.com/jshvn/brand#readme">README</a>. Every file here is cached for five minutes, so a change in the repository is live everywhere within that.
   </footer>
 </main>
+
+<button id="theme" type="button" aria-label="Switch between the light and dark theme" hidden>
+  <svg class="on-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  <svg class="on-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+</button>
+<script>
+  // The toggle only works with script, so it only appears with script.
+  const button = document.getElementById("theme");
+  button.hidden = false;
+  button.addEventListener("click", () => {
+    // color-scheme is set by both themes, so the computed value is what the reader
+    // is looking at right now -- system preference included, on the first click.
+    const next = getComputedStyle(document.documentElement).colorScheme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.theme = next; } catch (e) {}
+  });
+</script>
 </body>
 </html>
