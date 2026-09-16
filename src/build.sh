@@ -34,8 +34,17 @@ png jshvn-icon.svg                 favicon-48.png                      48
 magick "$out/favicon-16.png" "$out/favicon-32.png" "$out/favicon-48.png" "$out/favicon.ico"
 rm "$out/favicon-16.png" "$out/favicon-32.png" "$out/favicon-48.png"
 
-# the resume mark, for LaTeX
-rsvg-convert -f pdf -o "$out/jshvn-mark-resume.pdf" "$out/jshvn-mark-resume.svg"
+# A PDF of every mark form, for page layouts, LaTeX, and print vendors, so
+# nobody has to export one. The containers get none: a tile is a screen surface.
+# The resume pair carries the print greys, two tones for the mark set beside a
+# name and one tone for icon size, where the lighter cells would drop out.
+pdf() { rsvg-convert -f pdf -o "$out/$1.pdf" "$out/$1.svg"; }
+pdf jshvn-mark-on-light
+pdf jshvn-mark-on-dark
+pdf jshvn-mark-solid-on-light
+pdf jshvn-mark-solid-on-dark
+pdf jshvn-mark-resume
+pdf jshvn-mark-solid-resume
 
 # the photo ladder, rendered from the master. Upload forms cap either the pixel size
 # or the byte size, so the rungs are spaced to give a choice under both.
