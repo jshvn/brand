@@ -41,13 +41,15 @@ There are five icon tiles, each a charcoal square holding the on-dark mark.
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
 | **Icon, solid** | `jshvn-icon-solid.svg` | Rounded, with the solid mark. Favicons at 16 and 32px. |
 
-And three profile banners, one per platform, at the pixel size each platform asks for.
+And four wide images: a profile banner for each of three platforms, and the preview
+GitHub shows when a repository is linked. Each is at the size its platform asks for.
 
 | Platform | File | Pixels |
 |---|---|---|
 | **LinkedIn** | `social/jshvn-banner-linkedin-1584x396.png` | 1584 x 396 |
 | **Facebook** | `social/jshvn-banner-facebook-851x315.png` | 851 x 315 |
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
+| **GitHub** | `social/jshvn-social-preview-1280x640.png` | 1280 x 640 |
 
 A banner is the mark on a charcoal field patterned with the same grid, aligned so the
 mark's nine cells land on grid positions. Each field cell takes one of four grey tones at
@@ -57,11 +59,12 @@ rebuild matches the committed files byte for byte.
 
 Upload the PNG. The SVG beside it is the source.
 
-The mark sits in a different place on each banner. All three platforms overlay the avatar
-on the bottom left and crop the edges on mobile, and X runs the name and bio along the
-bottom, so each mark is placed in the region its platform leaves clear. Those regions are
-the `safe` entries in `src/social.mjs`, and the generator errors if a mark and its clear
-space would fall outside one.
+The mark sits in a different place on each. The three profile platforms overlay the
+avatar on the bottom left and crop the edges on mobile, and X runs the name and bio along
+the bottom, so each mark is placed in the region its platform leaves clear. GitHub
+overlays nothing, but a repository link unfurls at 1.91:1, which takes the sides, so that
+mark is centred. Those regions are the `safe` entries in `src/social.mjs`, and the
+generator errors if a mark and its clear space would fall outside one.
 
 The photo is the other half of the identity. `photo/profile.png` is the master. The JPEGs
 beside it are the same crop at smaller sizes, for upload forms that cap pixels or bytes.
@@ -78,6 +81,10 @@ beside it are the same crop at smaller sizes, for upload forms that cap pixels o
 
 The weights are for the current photo and change when it does. Every JPEG is quality 85
 with metadata stripped.
+
+`share/jshvn-share-1200x630.jpg` holds both halves at once, and is the only file here
+that does. It is the picture a link to ijosh.com unfurls with: the photo takes the left
+square, the mark signs the charcoal beside it.
 
 The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and the JPEGs in
 `photo/` from the master. Every mark form also ships as a PDF, for page layout, LaTeX and
@@ -103,12 +110,17 @@ Three things about the origin worth knowing:
   `site/_headers` and `site/robots.txt` have comments explaining this.
 - The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
   land on `ijosh.com`.
+- `/share/*` is crawlable, which is why it is a directory of its own and not a file in
+  `/social/`. It holds what ijosh.com names in `og:image`, and a search engine may fetch
+  that to draw a result for the page. Same risk as the favicon, same answer.
 - There are no CORS headers. `<img>`, `<link rel="icon">` and manifest icons are no-cors
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
 
-`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/` and `photo/`
-from the live origin and asserts status, content type, cache policy and robots headers.
+`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/`, `share/` and
+`photo/` from the live origin and asserts status, content type, cache policy and robots
+headers -- both directions, since one careless line in `site/_headers` can put a
+`noindex` on `/share/*` or take one off `/social/*`.
 
 ## Using it
 
@@ -126,6 +138,8 @@ from the tree.
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
 | A LinkedIn, Facebook or X profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
+| A link to ijosh.com, unfurling anywhere | The share image | [A share image](#a-share-image) |
+| A repository of mine, linked anywhere | The social preview | [A share image](#a-share-image) |
 | A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
 | Embroidery, engraving, vinyl, a stamp | The solid form, 8mm minimum | [Something in one ink](#something-in-one-ink) |
 | A terminal, or ASCII art | The solid form | [A terminal](#a-terminal) |
@@ -176,8 +190,8 @@ the scheme:
 </picture>
 ```
 
-For the share image, the photo takes one half and the mark sits on the white half beside
-it.
+The share image is already made and is four lines of markup: see
+[A share image](#a-share-image).
 
 The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`. Use
 the name for `alt`, never "logo".
@@ -286,13 +300,37 @@ and some strip `<picture>` entirely.
 | X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 
 The avatar over the bottom left of all three is the photo, so the banner carries only the
-mark.
+mark. `social/` also holds `jshvn-social-preview-1280x640.png`, which is not a profile
+banner -- GitHub has none -- but the preview a repository unfurls with. See
+[A share image](#a-share-image).
 
 Do not reuse a banner on another platform. Each mark is placed for its own platform's
 mobile crop and overlays, and on a different platform it can land under the avatar or off
 the edge. For a platform that is missing, add a row to `PLATFORMS` in `src/social.mjs`
 with its canvas and safe region, then run `task build`. The generator errors if the mark
 and its clear space do not fit the region.
+
+### A share image
+
+`share/jshvn-share-1200x630.jpg` is what a link to ijosh.com unfurls with. The photo
+takes the left square and the mark signs the charcoal beside it: the one surface here
+large enough for both halves of the identity.
+
+```html
+<meta property="og:image" content="https://brand.ijosh.com/share/jshvn-share-1200x630.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+```
+
+Give the width and the height. A consumer that has them lays the card out before the
+image arrives. It is a JPEG because the same picture as a PNG runs past a megabyte, and
+a card still loading is a card not shown.
+
+A repository gets `social/jshvn-social-preview-1280x640.png` instead, uploaded under
+Settings, General, Social preview. It carries the mark alone: the picture stands for the
+work, and the account avatar beside it is already the face. Unset, GitHub unfurls a
+repository as an avatar and a grey box of file-type statistics.
 
 ### A slide or a poster
 
@@ -417,8 +455,9 @@ The photo in `photo/` is the other half of the identity.
 - **The mark where someone expects to meet the work.** Favicons, READMEs, the resume,
   cards, signatures, organization accounts, and anything printed. A face on a resume is
   a liability.
-- **Both, when the surface is large enough:** the website and the share image. The photo
-  is the larger element and the mark is the signature.
+- **Both, when the surface is large enough:** the website and
+  [the share image](#a-share-image). The photo is the larger element and the mark is the
+  signature.
 - **A profile page already has both.** The avatar is the photo, so the banner carries
   only the mark.
 
@@ -436,18 +475,23 @@ below it follows.
 
 ## Building
 
-`src/marks.mjs` defines the grid, the drawing and the tones. `src/social.mjs` and
-`src/tokens.mjs` import from it. Each module exports data, and `src/build.mjs` is the
-only thing that writes files. `src/build.sh` runs it, then renders the PNGs, the ICO, the
-PDFs and the photo ladder with librsvg and ImageMagick inside a pinned Alpine image.
-Outputs are committed, so consumers never run this.
+`src/marks.mjs` defines the grid, the drawing and the tones. `src/social.mjs`,
+`src/share.mjs` and `src/tokens.mjs` import from it. Each module exports data, and
+`src/build.mjs` is the only thing that writes files. `src/build.sh` runs it, then renders
+the PNGs, the ICO, the PDFs, the photo ladder and the share image with librsvg and
+ImageMagick inside a pinned Alpine image. Outputs are committed, so consumers never run
+this.
+
+The share image is the one composite: `src/share.mjs` draws its charcoal half, and the
+build lays the photo master on the square beside it. Its SVG is an intermediate and does
+not survive the build, because half a picture is not a source anyone should be served.
 
 A redraw is an edit to `src/marks.mjs` and a `task build`.
 
 ```sh
 task          # the menu
-task build    # regenerate mark/, social/ and tokens.css
-task check    # prove mark/, social/ and photo/ match a fresh build
+task build    # regenerate mark/, social/, share/ and tokens.css
+task check    # prove mark/, social/, share/ and photo/ match a fresh build
 ```
 
 The host needs [go-task](https://taskfile.dev) and a container engine: Apple `container`
