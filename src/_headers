@@ -7,13 +7,19 @@
 # /mark/* carries no X-Robots-Tag on purpose. ijosh.com's favicon candidates live there,
 # and Google requires that Googlebot-Image be able to crawl a favicon it is to use.
 # Whether it would still use a noindex image is undocumented; the favicon is the reason
-# this origin exists, so it is not risked. The index page and the photos are noindex --
-# a search for the name should return ijosh.com, not this.
+# this origin exists, so it is not risked. The index page, the banners and the photos are
+# noindex -- a search for the name should return ijosh.com, not this. Nothing crawls a
+# profile banner to render it, so /social/* has no reason to make the same exception.
 
 /
   X-Robots-Tag: noindex
 
 /photo/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+
+/social/*
   X-Robots-Tag: noindex
   Cache-Control: public, max-age=300
   X-Content-Type-Options: nosniff

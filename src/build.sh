@@ -1,16 +1,19 @@
 #!/bin/sh
 # Runs inside the toolbox image. Regenerates the SVGs, then every raster and PDF
-# derived from them, then the photo ladder, into the tree given as $1 (default: the
-# repo root, so mark/ and photo/ in place).
+# derived from them, then the social banners, then tokens.css, then the photo ladder,
+# into the tree given as $1 (default: the repo root, so mark/, social/, tokens.css and
+# photo/ in place).
 set -eu
 # cairo stamps each PDF with the wall clock unless SOURCE_DATE_EPOCH is set, which
 # would make every build dirty the committed PDF. A fixed epoch keeps the PDF
 # byte-identical until the SVG behind it changes.
 export SOURCE_DATE_EPOCH=0
 root="${1:-.}"
-out="$root/mark"; pho="$root/photo"
-mkdir -p "$out" "$pho"
+out="$root/mark"; soc="$root/social"; pho="$root/photo"
+mkdir -p "$out" "$soc" "$pho"
 node src/marks.mjs "$out"
+node src/social.mjs "$soc"
+node src/tokens.mjs "$root"
 
 png() { rsvg-convert -w "$3" -h "$3" -o "$out/$2" "$out/$1"; }
 png jshvn-mark-on-light.svg        jshvn-mark-on-light-1024.png        1024
@@ -46,6 +49,17 @@ pdf jshvn-mark-solid-on-dark
 pdf jshvn-mark-resume
 pdf jshvn-mark-solid-resume
 
+# The social banners. Each PNG is named for the pixels it holds, because that is the
+# number an upload form asks for, and the size is read back out of the SVG it came from
+# so the platform table in src/social.mjs stays the only place those numbers live. A new
+# platform there needs no edit here.
+for svg in "$soc"/jshvn-banner-*.svg; do
+  base=$(basename "$svg" .svg)
+  size=$(sed -n '1s/^<svg[^>]*width="\([0-9]*\)" height="\([0-9]*\)".*/\1x\2/p' "$svg")
+  [ -n "$size" ] || { echo "no size in $svg" >&2; exit 1; }
+  rsvg-convert -o "$soc/$base-$size.png" "$svg"
+done
+
 # the photo ladder, rendered from the master. Upload forms cap either the pixel size
 # or the byte size, so the rungs are spaced to give a choice under both.
 [ "$root" = . ] || cp photo/profile.png "$pho"/
@@ -53,4 +67,4 @@ for px in 1024 512 400 256 128 64; do
   magick photo/profile.png -resize "${px}x${px}" -strip -quality 85 "$pho/profile-$px.jpg"
 done
 
-echo "built $(ls "$out" | wc -l | tr -d ' ') files in $out/ and $(ls "$pho" | wc -l | tr -d ' ') in $pho/"
+echo "built $(ls "$out" | wc -l | tr -d ' ') files in $out/, $(ls "$soc" | wc -l | tr -d ' ') in $soc/ and $(ls "$pho" | wc -l | tr -d ' ') in $pho/"
