@@ -100,14 +100,18 @@ file.
 
 Link to these URLs. Do not vendor the files, add this repository as a submodule, or link
 to GitHub. Everything is cached for five minutes, so a change here reaches every consumer
-without a redeploy.
+without a redeploy. Versioned paths with `immutable` caching were rejected: they would
+hand the update decision back to every consumer. Pages deploys every push to `main`; a
+tag and its release only record a version.
 
 Three things about the origin worth knowing:
 
 - `/mark/*` and `/tokens.css` are crawlable. Google only uses a favicon it can crawl, and
   ijosh.com's favicon candidates live under `/mark/`. The stylesheet is crawlable for
   the same reason: it is something another site needs in order to draw itself.
-  `site/_headers` and `site/robots.txt` have comments explaining this.
+  `site/_headers` and `site/robots.txt` have comments explaining this. If a mark ever
+  surfaces in image search, `_headers` can `noindex` `/mark/*` and lift it from
+  `apple-touch-icon-180.png` alone with a `!` line.
 - The index page, `/social/*` and `/photo/*` are `noindex`. A search for the name should
   land on `ijosh.com`.
 - `/share/*` is crawlable, which is why it is a directory of its own and not a file in
