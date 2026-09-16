@@ -1,24 +1,5 @@
-# Response headers for brand.ijosh.com. Pages applies these to static assets.
-#
-# Five minutes everywhere: the paths are unversioned, and a redraw must reach every
-# consumer without any of them redeploying. Bandwidth is unlimited on Pages, so there is
-# no reason to cache harder.
-#
-# /mark/* carries no X-Robots-Tag on purpose. ijosh.com's favicon candidates live there,
-# and Google requires that Googlebot-Image be able to crawl a favicon it is to use.
-# Whether it would still use a noindex image is undocumented; the favicon is the reason
-# this origin exists, so it is not risked. /tokens.css is unrestricted for the same
-# reason: ijosh.com imports it, and Google is explicit that a page it cannot fetch the
-# CSS for renders wrong. The line is what another site needs in order to draw itself.
-#
-# The index page, the banners and the photos are noindex -- a search for the name should
-# return ijosh.com, not this. Nothing fetches a profile banner to render a page with, so
-# /social/* has no reason to make the exception /mark/* and /tokens.css make.
-#
-# /share/* is on the other side of that line, and is why it is a directory of its own
-# rather than a file in /social/. It holds what ijosh.com names in og:image, so a search
-# engine may well want to fetch it in order to draw a result for that page -- the same
-# undocumented risk the favicon is not exposed to, and the same answer.
+# Five-minute cache everywhere: paths are unversioned, so a redraw must reach consumers without a redeploy.
+# No X-Robots-Tag on /mark/*, /share/* or /tokens.css: Google must be able to fetch the favicon, og:image and CSS.
 
 /
   X-Robots-Tag: noindex

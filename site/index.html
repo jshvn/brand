@@ -13,16 +13,13 @@
 </script>
 <link rel="stylesheet" href="/tokens.css">
 <style>
-  /* The palette is tokens.css, same origin, so nothing here restates a color it names.
-     These are the page's own: the rule and code surfaces, and the tile a swatch sits on,
-     which is the icon's charcoal in either theme. */
+  /* The palette is tokens.css. These are the page's own: rule, code and swatch-tile surfaces. */
   :root { --rule: #e5e7eb; --code: #f3f4f6; --tile: #17191c; --on-light: block; --on-dark: none; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) { --rule: #2a2d31; --code: #1f2226; --on-light: none; --on-dark: block; }
   }
   :root[data-theme="dark"] { --rule: #2a2d31; --code: #1f2226; --on-light: none; --on-dark: block; }
-  /* Artwork that comes in two cuts. CSS cannot swap an image source, so both ship
-     and the theme picks one; display:none keeps the other out of the a11y tree. */
+  /* Artwork in two cuts: both ship, the theme picks one, display:none hides the other from a11y. */
   .on-light { display: var(--on-light); }
   .on-dark { display: var(--on-dark); }
   * { box-sizing: border-box; }
@@ -194,8 +191,7 @@
   const button = document.getElementById("theme");
   button.hidden = false;
   button.addEventListener("click", () => {
-    // color-scheme is set by both themes, so the computed value is what the reader
-    // is looking at right now -- system preference included, on the first click.
+    // The computed color-scheme is what the reader sees now, system preference included.
     const next = getComputedStyle(document.documentElement).colorScheme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     try { localStorage.theme = next; } catch (e) {}
