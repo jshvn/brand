@@ -1,0 +1,39 @@
+# Mirrors every tag on main as a GitHub release named after the tag, with notes
+# from the commit messages since the previous tag (all commits for the first).
+# Tags not reachable from main are skipped; an already-released tag is a no-op.
+name: release
+
+on:
+  push:
+    tags: ['*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # full history for the main-ancestry check and the previous-tag range
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Create release for tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if ! git merge-base --is-ancestor "${TAG}^{commit}" origin/main; then
+            echo "tag ${TAG} is not on main; skipping release"
+            exit 0
+          fi
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "release ${TAG} already exists; nothing to do"
+            exit 0
+          fi
+          PREV=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)
+          if [ -n "$PREV" ]; then RANGE="${PREV}..${TAG}"; else RANGE="${TAG}"; fi
+          NOTES=$(git log --no-merges --pretty='- %s (%h)' $RANGE)
+          gh release create "${TAG}" --title "${TAG}" --notes "${NOTES}"
