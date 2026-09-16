@@ -14,6 +14,11 @@
 # The index page, the banners and the photos are noindex -- a search for the name should
 # return ijosh.com, not this. Nothing fetches a profile banner to render a page with, so
 # /social/* has no reason to make the exception /mark/* and /tokens.css make.
+#
+# /share/* is on the other side of that line, and is why it is a directory of its own
+# rather than a file in /social/. It holds what ijosh.com names in og:image, so a search
+# engine may well want to fetch it in order to draw a result for that page -- the same
+# undocumented risk the favicon is not exposed to, and the same answer.
 
 /
   X-Robots-Tag: noindex
@@ -24,6 +29,9 @@
 
 /social/*
   X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+
+/share/*
   Cache-Control: public, max-age=300
 
 /mark/*

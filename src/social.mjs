@@ -10,8 +10,9 @@
 // empty positions inside the mark's own 3x3, where they would read as cells added to
 // the mark.
 //
-// The avatar beside these is the photo, so the banner is the mark: see "Mark or photo"
-// in README.md.
+// The avatar beside a profile banner is the photo, so the banner is the mark: see
+// "Mark or photo" in README.md. GitHub's repo social preview is the same field with
+// nothing to place around -- no avatar, no name, so the mark sits dead centre.
 import { strict as assert } from 'node:assert';
 import { mark, GRID, NAME, T } from './marks.mjs';
 
@@ -29,6 +30,13 @@ const PLATFORMS = {
   // avatar bottom-left, the name and bio overlay the bottom on mobile, and the top and
   // bottom edges may crop -- so the mark rides higher here than on the other two
   x: { w: 1500, h: 500, pitch: 60, at: [0.65, 0.40], safe: [300, 50, 1500, 350] },
+  // GitHub's repo social preview, which is not a profile banner -- GitHub has none.
+  // Nothing overlays it, but a repo link unfurls at 1.91:1 on LinkedIn and in Slack,
+  // and that crop takes the sides, so the safe region is the centre it leaves.
+  github: {
+    w: 1280, h: 640, pitch: 72, at: [0.50, 0.50], safe: [64, 0, 1216, 640],
+    file: 'jshvn-social-preview',
+  },
 };
 
 // The field's own four tones, in a ramp that steps evenly once laid on the charcoal.
@@ -126,6 +134,8 @@ const banner = (p) => {
   );
 };
 
+// Each file is named for its platform, except where the platform has a name of its own
+// for the thing: GitHub calls it a social preview, and nobody calls it a banner.
 export const files = Object.fromEntries(
-  Object.entries(PLATFORMS).map(([name, p]) => [`jshvn-banner-${name}.svg`, banner(p)]),
+  Object.entries(PLATFORMS).map(([name, p]) => [`${p.file ?? `jshvn-banner-${name}`}.svg`, banner(p)]),
 );

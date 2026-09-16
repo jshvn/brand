@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { files as marks } from './marks.mjs';
 import { files as banners } from './social.mjs';
+import { files as share } from './share.mjs';
 import { css as tokens } from './tokens.mjs';
 
 // the tree to write into, from argv, default the repository root
@@ -21,7 +22,7 @@ const dir = (name, files) => {
   return `${Object.keys(files).length} in ${name}/`;
 };
 
-const written = [dir('mark', marks), dir('social', banners)];
+const written = [dir('mark', marks), dir('social', banners), dir('share', share)];
 writeFileSync(join(root, 'tokens.css'), tokens);
 written.push('tokens.css');
 console.log(`generated ${written.join(', ')}`);

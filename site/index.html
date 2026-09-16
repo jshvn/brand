@@ -137,6 +137,7 @@
 
   <h2>The banners</h2>
   <p>One profile banner per platform, at the pixel size that platform asks for. The mark sits on a charcoal field patterned with the same grid, placed where the platform will neither crop it nor cover it. All three put the avatar over the bottom left, and X runs the name and bio along the bottom on mobile. The avatar beside these is the photo.</p>
+  <p>GitHub's social preview is here too. It is not a profile banner &mdash; GitHub has none &mdash; but the picture a repository unfurls with. Nothing overlays it, so the mark is centred; a repository link unfurls at 1.91:1, and that crop is what it has to survive.</p>
   <p>Each field cell takes one of four grey tones, chosen by hashing the cell's position. There is no random seed, so the field looks scattered and every build produces the same file.</p>
   <figure class="banner">
     <img src="/social/jshvn-banner-linkedin-1584x396.png" alt="Josh Vaughen" width="1584" height="396">
@@ -147,8 +148,21 @@
     <tr><td><a href="/social/jshvn-banner-linkedin-1584x396.png">jshvn-banner-linkedin-1584x396.png</a></td><td>1584&times;396</td><td>The LinkedIn profile background.</td></tr>
     <tr><td><a href="/social/jshvn-banner-facebook-851x315.png">jshvn-banner-facebook-851x315.png</a></td><td>851&times;315</td><td>The Facebook profile cover.</td></tr>
     <tr><td><a href="/social/jshvn-banner-x-1500x500.png">jshvn-banner-x-1500x500.png</a></td><td>1500&times;500</td><td>The X profile header.</td></tr>
+    <tr><td><a href="/social/jshvn-social-preview-1280x640.png">jshvn-social-preview-1280x640.png</a></td><td>1280&times;640</td><td>A repository's social preview, under Settings, General.</td></tr>
   </table>
   <p>Upload the PNG. The SVG beside each is the source, same name without the size.</p>
+
+  <h2>The share image</h2>
+  <p>What a link to ijosh.com unfurls with, in a feed, in Slack, in a message. The photo takes the left square and the mark signs the charcoal beside it &mdash; the one file here that carries both halves of the identity at once. It is a JPEG because the same picture as a PNG runs past a megabyte, and a card still loading is a card not shown.</p>
+  <figure class="banner">
+    <img src="/share/jshvn-share-1200x630.jpg" alt="Josh Vaughen" width="1200" height="630">
+    <figcaption>share, 1200&times;630</figcaption>
+  </figure>
+  <table>
+    <tr><th>File</th><th>Pixels</th><th>Use</th></tr>
+    <tr><td><a href="/share/jshvn-share-1200x630.jpg">jshvn-share-1200x630.jpg</a></td><td>1200&times;630</td><td>The <code>og:image</code> for ijosh.com. Give the width and height in the markup too.</td></tr>
+  </table>
+  <p>This is the one directory here a search engine may crawl: it is what ijosh.com names in <code>og:image</code>, and a search engine may fetch that to draw a result for the page.</p>
 
   <h2>The palette</h2>
   <p>Every color ijosh.com paints, as custom properties, in a light block and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's two tones, read from the artwork so they cannot drift from it. Inline the values at build time. A cross-origin <code>@import</code> blocks your page from rendering until this origin answers.</p>

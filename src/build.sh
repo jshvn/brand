@@ -1,15 +1,15 @@
 #!/bin/sh
 # Runs inside the toolbox image. src/build.mjs writes every generated text file -- the
 # SVGs in mark/ and social/, and tokens.css -- and the rest of this script renders what
-# needs librsvg or ImageMagick: the PNGs, the ICO, the PDFs and the photo ladder. All of
-# it lands in the tree given as $1, default the repo root.
+# needs librsvg or ImageMagick: the PNGs, the ICO, the PDFs, the photo ladder and the
+# share image. All of it lands in the tree given as $1, default the repo root.
 set -eu
 # cairo stamps each PDF with the wall clock unless SOURCE_DATE_EPOCH is set, which
 # would make every build dirty the committed PDF. A fixed epoch keeps the PDF
 # byte-identical until the SVG behind it changes.
 export SOURCE_DATE_EPOCH=0
 root="${1:-.}"
-out="$root/mark"; soc="$root/social"; pho="$root/photo"
+out="$root/mark"; soc="$root/social"; pho="$root/photo"; shr="$root/share"
 mkdir -p "$pho"
 node src/build.mjs "$root"
 
@@ -47,11 +47,12 @@ pdf jshvn-mark-solid-on-dark
 pdf jshvn-mark-resume
 pdf jshvn-mark-solid-resume
 
-# The social banners. Each PNG is named for the pixels it holds, because that is the
-# number an upload form asks for, and the size is read back out of the SVG it came from
-# so the platform table in src/social.mjs stays the only place those numbers live. A new
-# platform there needs no edit here.
-for svg in "$soc"/jshvn-banner-*.svg; do
+# Everything in social/: the profile banners and the GitHub repo social preview. Each
+# PNG is named for the pixels it holds, because that is the number an upload form asks
+# for, and the size is read back out of the SVG it came from so the platform table in
+# src/social.mjs stays the only place those numbers live. A new row there needs no edit
+# here, whatever it is called.
+for svg in "$soc"/*.svg; do
   base=$(basename "$svg" .svg)
   size=$(sed -n '1s/^<svg[^>]*width="\([0-9]*\)" height="\([0-9]*\)".*/\1x\2/p' "$svg")
   [ -n "$size" ] || { echo "no size in $svg" >&2; exit 1; }
@@ -65,4 +66,15 @@ for px in 1024 512 400 256 128 64; do
   magick photo/profile.png -resize "${px}x${px}" -strip -quality 85 "$pho/profile-$px.jpg"
 done
 
-echo "built $(ls "$out" | wc -l | tr -d ' ') files in $out/, $(ls "$soc" | wc -l | tr -d ' ') in $soc/ and $(ls "$pho" | wc -l | tr -d ' ') in $pho/"
+# The share image: the picture a link to ijosh.com unfurls with. src/share.mjs draws the
+# charcoal half and the photo master takes the square beside it. JPEG, because a 1200x630
+# PNG carrying a photograph runs past a megabyte, and every consumer of an og:image takes
+# a JPEG. Both intermediates go: neither is a picture anyone should be served.
+rsvg-convert -o "$shr/jshvn-share.png" "$shr/jshvn-share.svg"
+magick "$shr/jshvn-share.png" \
+  \( photo/profile.png -resize 630x630 \) -geometry +0+0 -composite \
+  -strip -quality 85 "$shr/jshvn-share-1200x630.jpg"
+rm "$shr/jshvn-share.png" "$shr/jshvn-share.svg"
+
+n() { ls "$1" | wc -l | tr -d ' '; }
+echo "built $(n "$out") files in $out/, $(n "$soc") in $soc/, $(n "$pho") in $pho/ and $(n "$shr") in $shr/"

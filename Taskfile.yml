@@ -2,7 +2,8 @@
 # consume. The SVGs in mark/ are generated from src/marks.mjs and those in social/ from
 # src/social.mjs; the PNG, ICO and PDF files beside them are rendered from those SVGs
 # inside the toolbox image, and the JPEGs in photo/ are resized from photo/profile.png
-# there too. All of it is committed, so consumers never need the toolchain. `task check`
+# there too. share/ is the one composite: src/share.mjs draws its charcoal half and the
+# photo master takes the square beside it. All of it is committed, so consumers never need the toolchain. `task check`
 # proves the committed files match a fresh build. Rules for using the mark are in
 # README.md.
 #
@@ -41,11 +42,11 @@ tasks:
           "                            ${d}a diff means a source changed and was not rebuilt${r}" \
           "" \
           "${c}checks -- reaches the live origin${r}" \
-          "  task check:urls           Every file in mark/, social/ and photo/ is served at {{.ORIGIN}}" \
+          "  task check:urls           Every file in mark/, social/, share/ and photo/ is served at {{.ORIGIN}}" \
           "                            ${d}status, content type, cache policy, robots; ORIGIN= to point elsewhere${r}" \
           "" \
-          "${c}build -- rewrites mark/, social/ and photo/${r}" \
-          "  task build                Regenerate mark/ and social/, and photo/ from its master" \
+          "${c}build -- rewrites mark/, social/, share/ and photo/${r}" \
+          "  task build                Regenerate mark/, social/ and share/, and photo/ from its master" \
           "                            ${d}commit the result; consumers never run this${r}" \
           "" \
           "${c}site -- what Pages serves at brand.ijosh.com${r}" \
@@ -68,6 +69,7 @@ tasks:
         vars: { CLI_ARGS: sh src/build.sh .build }
       - diff -rq .build/mark mark
       - diff -rq .build/social social
+      - diff -rq .build/share share
       - diff -rq .build/photo photo
       - diff .build/tokens.css tokens.css
       # The index page is hand-written and the files it points at are generated, so that
@@ -75,7 +77,7 @@ tasks:
       # the page also shows a /favicon.ico example for a consumer's own site root.
       - |
         fail=0
-        for f in $(grep -o '"/\(mark/\|social/\|photo/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
+        for f in $(grep -o '"/\(mark/\|social/\|share/\|photo/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
           [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
         done
         exit "$fail"
@@ -87,9 +89,9 @@ tasks:
       ORIGIN: '{{.ORIGIN}}'
     cmds:
       # One request per file, headers only. Content type is judged by extension family;
-      # ICO is accepted under either name Cloudflare has used for it. /mark/* must carry
-      # no X-Robots-Tag and / must -- a copy-paste in _headers breaks those together, so
-      # both directions are asserted.
+      # ICO is accepted under either name Cloudflare has used for it. /mark/* and
+      # /share/* must carry no X-Robots-Tag and / must -- a copy-paste in _headers breaks
+      # those together, so both directions are asserted.
       - |
         fail=0
         probe() { # path  expected-type-regex  cache(yes|no)  robots(noindex|none|any)
@@ -124,12 +126,13 @@ tasks:
         probe /tokens.css  'text/css'   yes none
         for f in $(find mark -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         for f in $(find social -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
+        for f in $(find share -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
         exit "$fail"
 
   build:
-    desc: Regenerate every file in mark/, social/ and photo/, and tokens.css
+    desc: Regenerate every file in mark/, social/, share/ and photo/, and tokens.css
     deps: [image]
     cmds:
       - task: run
