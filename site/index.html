@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>brand</title>
-<meta name="description" content="The mark for Josh Vaughen and ijosh.com, the rules for using it, and every file other sites link to.">
+<meta name="description" content="The mark for Josh Vaughen and ijosh.com, the palette and the type, the rules for using them, and every file other sites link to.">
 <link rel="icon" href="/mark/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="/mark/jshvn-icon.svg" type="image/svg+xml">
 <script>
   // Before first paint, so a remembered theme never flashes the other one.
   try { if (localStorage.theme) document.documentElement.dataset.theme = localStorage.theme; } catch (e) {}
 </script>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600-latin.woff2" crossorigin>
 <link rel="stylesheet" href="/tokens.css">
 <style>
   /* The palette is tokens.css. These are the page's own: rule, code and swatch-tile surfaces. */
@@ -23,12 +24,13 @@
   .on-light { display: var(--on-light); }
   .on-dark { display: var(--on-dark); }
   * { box-sizing: border-box; }
+  :root { font-synthesis: none; }
   body {
     margin: 0; background: var(--bg); color: var(--text-body);
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font: 16px/var(--font-text-leading) var(--font-text); letter-spacing: .01em;
   }
   main { max-width: 52rem; margin: 0 auto; padding: 3rem 1rem 4rem; }
-  h1, h2 { color: var(--text); line-height: 1.2; }
+  h1, h2 { color: var(--text); line-height: 1; font-family: var(--font-display); font-weight: var(--font-display-weight); text-transform: uppercase; letter-spacing: normal; }
   h1 { font-size: 2rem; margin: 1rem 0 .25rem; }
   h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
   p { margin: .5rem 0 1rem; }
@@ -39,7 +41,7 @@
   th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
   th { color: var(--text); font-weight: 600; }
   td:first-child { white-space: nowrap; }
-  code { font: .875em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code); padding: .1em .35em; border-radius: 4px; }
+  code { letter-spacing: normal; font: .875em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--code); padding: .1em .35em; border-radius: 4px; }
   pre { background: var(--code); padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
   pre code { background: none; padding: 0; }
   .swatches { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 1rem 0; }
@@ -50,6 +52,15 @@
   .banner { margin: 1rem 0; }
   .banner img { display: block; width: 100%; height: auto; border-radius: 6px; }
   .banner figcaption { color: var(--text-muted); font-size: .85rem; margin-top: .5rem; }
+  .specimen { margin: 1rem 0; }
+  .specimen dt { color: var(--text-muted); font-size: .85rem; margin-top: 1.25rem; }
+  .specimen dd { margin: .5rem 0 0; }
+  .specimen .display { font: var(--font-display-weight) 2.5rem/1 var(--font-display); text-transform: uppercase; letter-spacing: normal; color: var(--text); }
+  .specimen .labels { display: flex; flex-wrap: wrap; gap: 8px; }
+  .specimen .label {
+    font: 14px/1 var(--font-label); letter-spacing: var(--font-label-tracking); color: var(--text);
+    background: var(--pill-bg); border-radius: 14px; padding: 14px 10px 14px calc(10px + var(--font-label-tracking));
+  }
   ul { padding-left: 1.25rem; }
   li { margin: .25rem 0; }
   #theme {
@@ -70,7 +81,7 @@
     <img class="on-light" src="/mark/jshvn-mark-on-light.svg" alt="Josh Vaughen" width="112" height="112">
     <img class="on-dark" src="/mark/jshvn-mark-on-dark.svg" alt="Josh Vaughen" width="112" height="112">
     <h1>brand</h1>
-    <p class="lede">The mark for Josh Vaughen and ijosh.com, the color palette, and every file other sites link to. Paths mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>, and the same for <code>social/</code> and <code>photo/</code>. Link to these URLs instead of copying the files.</p>
+    <p class="lede">The mark for Josh Vaughen and ijosh.com, the color palette, the type, and every file other sites link to. Paths mirror <a href="https://github.com/jshvn/brand">the repository</a>: <code>/mark/&lt;file&gt;</code> is <code>mark/&lt;file&gt;</code>, and the same for <code>social/</code>, <code>share/</code>, <code>photo/</code> and <code>fonts/</code>. Link to these URLs instead of copying the files; the palette and the fonts are the exceptions, and say why below.</p>
   </header>
 
   <h2>The mark</h2>
@@ -167,8 +178,27 @@
   <p>Every color ijosh.com paints, as custom properties, in a light block and a dark block. <code>--mark</code> and <code>--mark-muted</code> are the mark's two tones, read from the artwork so they cannot drift from it. Inline the values at build time. A cross-origin <code>@import</code> blocks your page from rendering until this origin answers.</p>
   <table>
     <tr><th>File</th><th>Use</th></tr>
-    <tr><td><a href="/tokens.css">tokens.css</a></td><td>The palette. The source for every color on ijosh.com.</td></tr>
+    <tr><td><a href="/tokens.css">tokens.css</a></td><td>The palette and the type. The source for every color and face on ijosh.com.</td></tr>
   </table>
+
+  <h2>The type</h2>
+  <p>Three faces, one job and one weight each: the type ijosh.com sets. <code>tokens.css</code> carries a token for each and the <code>@font-face</code> rules for every file below.</p>
+  <dl class="specimen">
+    <dt>Display &middot; Montserrat 600, uppercase, untracked &middot; the name, and headings</dt>
+    <dd class="display">Josh Vaughen</dd>
+    <dt>Label &middot; Graduate 400, 14px, tracked 0.28em &middot; one or two words</dt>
+    <dd class="labels"><span class="label">Engineer</span><span class="label">Explorer</span><span class="label">Seattle</span></dd>
+    <dt>Text &middot; PT Serif 400, 16px, line height 1.4 &middot; running text</dt>
+    <dd>Running text is set in PT Serif at 16px, in the body grey, with a little air between the lines. It is the only face here meant to be read at length.</dd>
+  </dl>
+  <table>
+    <tr><th>File</th><th>Use</th></tr>
+    <tr><td><a href="/fonts/montserrat-600-latin.woff2">montserrat-600-latin.woff2</a>, <a href="/fonts/montserrat-600-latin-ext.woff2">-latin-ext</a></td><td>Display. Preload the latin file.</td></tr>
+    <tr><td><a href="/fonts/graduate-400-latin.woff2">graduate-400-latin.woff2</a></td><td>Label. Latin only.</td></tr>
+    <tr><td><a href="/fonts/pt-serif-400-latin.woff2">pt-serif-400-latin.woff2</a>, <a href="/fonts/pt-serif-400-latin-ext.woff2">-latin-ext</a></td><td>Text.</td></tr>
+    <tr><td><a href="/fonts/OFL.txt">OFL.txt</a></td><td>The SIL Open Font License and each face's copyright. Keep it with the fonts.</td></tr>
+  </table>
+  <p>Copy <code>fonts/</code> to <code>/fonts/</code> at your site root, beside your copy of <code>tokens.css</code>. A font is a CORS fetch and this origin sends no CORS headers, so a font linked from here is refused. Ask for the weight that ships, set <code>font-synthesis: none</code> so nothing is faked in bold or italic, and type labels in title case: Graduate draws its lowercase as small capitals.</p>
 
   <h2>The rules that matter</h2>
   <ul>
@@ -180,7 +210,7 @@
   </ul>
 
   <footer>
-    The full rules, the color table and the build are in the <a href="https://github.com/jshvn/brand#readme">README</a>. Every file here is cached for five minutes, so a change in the repository is live everywhere within that.
+    The full rules, the color and type tables and the build are in the <a href="https://github.com/jshvn/brand#readme">README</a>. Every file here is cached for five minutes, so a change in the repository is live everywhere within that.
   </footer>
 </main>
 

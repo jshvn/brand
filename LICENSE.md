@@ -9,6 +9,12 @@ identify Josh Vaughen. All rights reserved. They may be reproduced only to refer
 Josh Vaughen or to ijosh.com, and not as the identity of any other person, product
 or organization.
 
+## The fonts
+
+Everything under `fonts/` is Montserrat, Graduate and PT Serif, by their authors, under
+the SIL Open Font License 1.1. `fonts/OFL.txt` holds their copyright notices and the
+license.
+
 ## The code
 
 Everything else in this repository (`src/`, `docker/`, `Taskfile.yml`, `tokens.css`)

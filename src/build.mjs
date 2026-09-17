@@ -1,5 +1,6 @@
 // Builds every committed asset into argv[2], default the repo root: the SVGs and tokens.css,
 // then the PNGs, ICO, PDFs, photo ladder and share image. Runs inside the toolbox image.
+import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -8,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { files as marks } from './marks.mjs';
 import { banners } from './social.mjs';
 import { share } from './share.mjs';
-import { css } from './tokens.mjs';
+import { css, FACES, fontFile } from './tokens.mjs';
 
 process.env.SOURCE_DATE_EPOCH = '0'; // cairo stamps PDFs with the wall clock otherwise
 const repo = fileURLToPath(new URL('..', import.meta.url));
@@ -25,6 +26,10 @@ const jpeg = (args, out, input) => run('magick', [...args, '-strip', '-quality',
 for (const d of ['mark', 'social', 'share', 'photo']) mkdirSync(at(d), { recursive: true });
 for (const [file, svg] of Object.entries(marks)) writeFileSync(at('mark', file), svg);
 writeFileSync(at('tokens.css'), css);
+
+// fonts/ is committed by hand, not built: it must hold exactly the files tokens.css names, and the license.
+const named = FACES.flatMap(f => Object.keys(f.subsets).map(sub => fontFile(f.family, f.weight, sub)));
+assert.deepEqual(readdirSync(join(repo, 'fonts')).sort(), [...named, 'OFL.txt'].sort(), 'fonts/ and tokens.css disagree');
 
 const SIZES = {
   'jshvn-mark-on-light': [1024, 512], 'jshvn-mark-on-dark': [1024, 512],
