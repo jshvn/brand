@@ -1,5 +1,6 @@
 # Five-minute cache everywhere: paths are unversioned, so a redraw must reach consumers without a redeploy.
 # No X-Robots-Tag on /mark/*, /share/* or /tokens.css: Google must be able to fetch the favicon, og:image and CSS.
+# /fonts/* sits with them: a site serves its own copy, and nothing indexes a font.
 
 /
   X-Robots-Tag: noindex
@@ -19,6 +20,9 @@
   Cache-Control: public, max-age=300
 
 /tokens.css
+  Cache-Control: public, max-age=300
+
+/fonts/*
   Cache-Control: public, max-age=300
 
 /*

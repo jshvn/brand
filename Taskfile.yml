@@ -1,5 +1,5 @@
-# The brand kit for ijosh.com: every file in mark/, social/, share/, photo/ and tokens.css,
-# generated in the toolbox image and committed. Cloudflare Pages serves it at brand.ijosh.com.
+# The brand kit for ijosh.com: every file in mark/, social/, share/, photo/, fonts/ and tokens.css,
+# generated in the toolbox image (fonts/ excepted) and committed. Cloudflare Pages serves it at brand.ijosh.com.
 version: '3'
 
 vars:
@@ -31,7 +31,7 @@ tasks:
           "                            ${d}a diff means a source changed and was not rebuilt${r}" \
           "" \
           "${c}checks -- reaches the live origin${r}" \
-          "  task check:urls           Every file in mark/, social/, share/ and photo/ is served at {{.ORIGIN}}" \
+          "  task check:urls           Every file in mark/, social/, share/, photo/ and fonts/ is served at {{.ORIGIN}}" \
           "                            ${d}status, content type, cache policy, robots; ORIGIN= to point elsewhere${r}" \
           "" \
           "${c}build -- rewrites mark/, social/, share/ and photo/${r}" \
@@ -64,7 +64,7 @@ tasks:
       # The page is hand-written and links generated files, so check every link resolves.
       - |
         fail=0
-        for f in $(grep -o '"/\(mark/\|social/\|share/\|photo/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
+        for f in $(grep -o '"/\(mark/\|social/\|share/\|photo/\|fonts/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
           [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
         done
         exit "$fail"
@@ -103,6 +103,7 @@ tasks:
             *.css) echo 'text/css' ;;
             *.jpg) echo 'image/jpeg' ;;       *.pdf) echo 'application/pdf' ;;
             *.ico) echo 'image/(vnd\.microsoft\.icon|x-icon)' ;;
+            *.woff2) echo 'font/woff2' ;;     *.txt) echo 'text/plain' ;;
             *) echo '.' ;;
           esac
         }
@@ -113,6 +114,7 @@ tasks:
         for f in $(find social -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         for f in $(find share -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
+        for f in $(find fonts -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
         exit "$fail"
 

@@ -7,14 +7,17 @@
 
 <h1 align="center">brand</h1>
 
-<p align="center">The mark for Josh Vaughen and ijosh.com, the color palette, and the rules for using them.</p>
+<p align="center">The mark for Josh Vaughen and ijosh.com, the color palette, the type, and the rules for using them.</p>
 
-This repository is the source of truth for the mark and the palette. Everything in it is
-served at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to those
-URLs instead of keeping copies, so a change here is live everywhere within five minutes.
+This repository is the source of truth for the mark, the palette and the type. Everything
+in it is served at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to
+those URLs instead of keeping copies, so a change here is live everywhere within five
+minutes. The exceptions are `favicon.ico`, `tokens.css` and `fonts/`, which a site serves
+from its own origin and diffs against these URLs in a check.
 
 [What's here](#whats-here) - [Where it is served](#where-it-is-served) -
-[Using it](#using-it) - [The palette](#the-palette) - [The rules](#the-rules) -
+[Using it](#using-it) - [The palette](#the-palette) - [Typography](#typography) -
+[The rules](#the-rules) -
 [Building](#building) - [License](#license)
 
 ## What's here
@@ -90,6 +93,9 @@ with metadata stripped.
 that does. It is the picture a link to ijosh.com unfurls with: the photo takes the left
 square, the mark signs the charcoal beside it.
 
+`fonts/` holds the three typefaces as web fonts, in the weight each is used at, with their
+license. See [Typography](#typography).
+
 The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and the JPEGs in
 `photo/` from the master. Every mark form also ships as a PDF, for page layout, LaTeX and
 print vendors. The icon tiles do not, since they are only for screens. See
@@ -121,6 +127,8 @@ Three things about the origin worth knowing:
 - `/share/*` is crawlable, which is why it is a directory of its own and not a file in
   `/social/`. It holds what ijosh.com names in `og:image`, and a search engine may fetch
   that to draw a result for the page. Same risk as the favicon, same answer.
+- `/fonts/*` is served so a site's copy can be diffed against it, not for linking. A font
+  is a CORS fetch, so a browser on another origin refuses it.
 - There are no CORS headers. `<img>`, `<link rel="icon">` and manifest icons are no-cors
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
@@ -148,6 +156,7 @@ from the tree.
 | A LinkedIn, Facebook, X, Discord or Bluesky profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
 | A link to ijosh.com, unfurling anywhere | The share image | [A share image](#a-share-image) |
 | A repository of mine, linked anywhere | The social preview | [A share image](#a-share-image) |
+| Type on a website | `tokens.css` and `fonts/`, copied to your site root | [Typography](#typography) |
 | A slide or a poster | The mark on a flat field | [A slide or a poster](#a-slide-or-a-poster) |
 | Embroidery, engraving, vinyl, a stamp | The solid form, 8mm minimum | [Something in one ink](#something-in-one-ink) |
 | A terminal, or ASCII art | The solid form | [A terminal](#a-terminal) |
@@ -369,8 +378,8 @@ with a dimmer color.
 
 Every color ijosh.com paints is a custom property in [tokens.css](tokens.css), in a
 light block and a dark block. The file is generated from `src/tokens.mjs`, committed, and
-served at `https://brand.ijosh.com/tokens.css`. A site that needs a color reads it from
-there and keeps no copy.
+served at `https://brand.ijosh.com/tokens.css`. A site that needs a color copies it from
+there at build time, as [Using the palette](#using-the-palette) describes.
 
 | Token | Light | Dark | What it paints |
 |---|---|---|---|
@@ -407,6 +416,98 @@ table lacks, add it to `src/tokens.mjs` and run `task build`, so every consumer 
 
 **Keep the accent on links**, hover states and focus rings. Headings, borders, buttons
 and the mark stay grey.
+
+## Typography
+
+Three faces, one job and one weight each. They are the type ijosh.com sets.
+
+| Role | Face | Setting | For |
+|---|---|---|---|
+| **Display** | Montserrat 600 | Uppercase, untracked, line height 1 | The name, and headings |
+| **Label** | Graduate 400 | 14px, tracked 0.28em, line height 1 | One or two words: a role, a place, a tag |
+| **Text** | PT Serif 400 | 16px, tracked 0.01em, line height 1.4, in `--text-body` | Running text: a bio, a paragraph, a caption |
+
+On ijosh.com the name is Display, the role and place tiles are Labels, and the bio is Text.
+A geometric sans carries the name, a collegiate slab in capitals names what the person
+does, and a text serif is what you read.
+
+Display has no fixed size: it is sized to the space it fills. ijosh.com fits the name to
+its tile, from 30px on a phone to 54px. Label and Text are fixed on screen.
+
+| Token | Value |
+|---|---|
+| `--font-display` | `"Montserrat", sans-serif` |
+| `--font-display-weight` | `600` |
+| `--font-label` | `"Graduate", serif` |
+| `--font-label-tracking` | `0.28em` |
+| `--font-text` | `"PT Serif", Georgia, serif` |
+| `--font-text-leading` | `1.4` |
+
+`tokens.css` carries these beside the colors, and the `@font-face` rules for every file in
+`fonts/`. Code is the one text outside the three faces, and it goes in the reader's own
+monospace: `ui-monospace, SFMono-Regular, Menlo, monospace`.
+
+### Setting the type
+
+- **Ask for the weight that ships.** Montserrat at 600, the other two at 400. The
+  Montserrat file is variable, but declared at 600 it draws 600 whatever is asked for, so
+  `font-weight: 700` renders the same and misstates the design.
+- **No bold, no italic.** Neither ships, and a browser fakes both badly. Set
+  `font-synthesis: none` on the root, so a stray `<strong>` or `<em>` stays regular. If a
+  surface truly needs one, add the face to `fonts/` and `FACES` in `src/tokens.mjs`.
+- **Display is uppercase and untracked.** It is the name's face, and the name is never
+  set in lowercase.
+- **Type labels in title case.** Graduate draws its lowercase as small capitals, so
+  `Engineer` renders as a full capital and small capitals after it, and still reads, copies
+  and searches as a word. Do not add `text-transform: uppercase`: it sets every letter at
+  full height and loses the small capitals.
+- **A label is a word or two, never a sentence,** and never under 14px. Tracking that wide
+  breaks a line apart.
+- **Balance a centred label.** Tracking adds space after the last letter too, so a
+  centred label sits left of centre. Add the tracking to its left padding:
+  `padding-left: calc(10px + var(--font-label-tracking))`.
+- **Text is for reading only.** Headings and labels are never set in it.
+
+### Using the type
+
+Copy `fonts/` to `/fonts/` at your site root, beside your copy of `tokens.css`. Its
+`@font-face` rules name root-relative `/fonts/` paths, so the pair works on any origin that
+serves both. Diff both copies against brand.ijosh.com in a check, as with `favicon.ico`.
+Keep `OFL.txt` with them: it is their license.
+
+Do not link the fonts from brand.ijosh.com. This origin sends no CORS headers, so a
+browser refuses a font from it, and a second origin would cost a connection before any
+text paints. Your Content-Security-Policy needs only `font-src 'self'`.
+
+Preload the Display face, so the name does not swap in after the page draws:
+
+```html
+<link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-600-latin.woff2" crossorigin>
+```
+
+```css
+:root { font-synthesis: none; }
+h1 {
+  font: var(--font-display-weight) 3rem/1 var(--font-display);
+  text-transform: uppercase;
+  color: var(--text);
+}
+.label {
+  font: 14px/1 var(--font-label);
+  letter-spacing: var(--font-label-tracking);
+}
+p {
+  font: 16px/var(--font-text-leading) var(--font-text);
+  letter-spacing: 0.01em;
+  color: var(--text-body);
+}
+```
+
+Off the web, for slides, print or a design tool, install the full families from Google
+Fonts: [Montserrat](https://fonts.google.com/specimen/Montserrat),
+[Graduate](https://fonts.google.com/specimen/Graduate) and
+[PT Serif](https://fonts.google.com/specimen/PT+Serif). The files in `fonts/` are web
+subsets that desktop apps will not install. The roles and settings stay the same.
 
 ## The rules
 
@@ -490,12 +591,15 @@ below it follows.
 
 ## Building
 
-`src/tokens.mjs` defines every color. `src/marks.mjs` defines the grid and the drawing,
+`src/tokens.mjs` defines every color and every typeface. `src/marks.mjs` defines the grid and the drawing,
 and `src/social.mjs` and `src/share.mjs` place the mark on their canvases through it.
 Each module exports data, and `src/build.mjs` is the only thing that writes files: the
 SVGs and tokens.css, then the PNGs, the ICO, the PDFs, the photo ladder and the share
 image with librsvg and ImageMagick inside a pinned Alpine image. Outputs are committed,
 so consumers never run this.
+
+`fonts/` is the one input committed by hand. The build fails unless it holds exactly the
+files `tokens.css` names, plus the license.
 
 The share image is the one composite: `src/share.mjs` draws its charcoal half, and the
 build lays the photo master on the square beside it. Its SVG is never written, because
@@ -506,7 +610,7 @@ A redraw is an edit to `src/marks.mjs` and a `task build`.
 ```sh
 task          # the menu
 task build    # regenerate mark/, social/, share/ and tokens.css
-task check    # prove mark/, social/, share/ and photo/ match a fresh build
+task check    # prove mark/, social/, share/ and photo/ match a fresh build, and fonts/ matches tokens.css
 ```
 
 The host needs [go-task](https://taskfile.dev) and a container engine: Apple `container`
@@ -515,4 +619,5 @@ on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check` for
 ## License
 
 The mark and the photo are my own work, all rights reserved. The code is MIT, and that
-grant covers the code and not the design it draws. See [LICENSE.md](LICENSE.md).
+grant covers the code and not the design it draws. The fonts are under the SIL Open Font
+License. See [LICENSE.md](LICENSE.md).
