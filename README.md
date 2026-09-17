@@ -34,7 +34,7 @@ It comes in two forms.
 | **Mark** | `jshvn-mark-on-light.svg`, `jshvn-mark-on-dark.svg` | The primary form. Two tones. |
 | **Mark, solid** | `jshvn-mark-solid-on-light.svg`, `jshvn-mark-solid-on-dark.svg` | One tone. For anywhere the grey cannot be trusted. |
 
-There are five icon tiles, each a charcoal square holding the on-dark mark.
+The icon tiles are each a charcoal square holding the on-dark mark.
 
 | Tile | File | Use |
 |---|---|---|
@@ -44,8 +44,8 @@ There are five icon tiles, each a charcoal square holding the on-dark mark.
 | **Icon, maskable** | `jshvn-icon-maskable.svg` | Square with the mark at 74%. Android maskable icons. |
 | **Icon, solid** | `jshvn-icon-solid.svg` | Rounded, with the solid mark. Favicons at 16 and 32px. |
 
-And six wide images: a profile banner for each of five platforms, and the preview
-GitHub shows when a repository is linked. Each is at the size its platform asks for.
+And the wide images: a profile banner per platform, and the preview GitHub shows when a
+repository is linked. Each is at the size its platform asks for.
 
 | Platform | File | Pixels |
 |---|---|---|
@@ -64,7 +64,7 @@ rebuild matches the committed files byte for byte.
 
 Upload the PNG. The SVG beside it is the source.
 
-The mark sits in a different place on each. The five profile platforms overlay the
+The mark sits in a different place on each. The profile platforms overlay the
 avatar on the bottom left and crop the edges, X runs the name and bio along the bottom,
 Discord hangs the status bubble there, and Bluesky crops the top and bottom on the web
 and the sides on a phone, so each mark is placed in the region its
@@ -93,7 +93,7 @@ with metadata stripped.
 that does. It is the picture a link to ijosh.com unfurls with: the photo takes the left
 square, the mark signs the charcoal beside it.
 
-`fonts/` holds the three typefaces as web fonts, in the weight each is used at, with their
+`fonts/` holds the typefaces as web fonts, in the weight each is used at, with their
 license. See [Typography](#typography).
 
 The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and the JPEGs in
@@ -109,12 +109,13 @@ Cloudflare Pages builds `main` with `sh site/stage.sh` and serves the result at
 file.
 
 Link to these URLs. Do not vendor the files, add this repository as a submodule, or link
-to GitHub. Everything is cached for five minutes, so a change here reaches every consumer
+to GitHub. The exceptions are the files the intro names, which a site serves from its own
+origin and diffs against these URLs. Everything is cached for five minutes, so a change here reaches every consumer
 without a redeploy. Versioned paths with `immutable` caching were rejected: they would
 hand the update decision back to every consumer. Pages deploys every push to `main`; a
 tag and its release only record a version.
 
-Three things about the origin worth knowing:
+Worth knowing about the origin:
 
 - `/mark/*` and `/tokens.css` are crawlable. Google only uses a favicon it can crawl, and
   ijosh.com's favicon candidates live under `/mark/`. The stylesheet is crawlable for
@@ -133,8 +134,8 @@ Three things about the origin worth knowing:
   fetches. A consuming page does need this origin under `img-src` in its
   Content-Security-Policy.
 
-`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/`, `share/` and
-`photo/` from the live origin and asserts status, content type, cache policy and robots
+`task check:urls` fetches `tokens.css` and every file in `mark/`, `social/`, `share/`,
+`photo/` and `fonts/` from the live origin and asserts status, content type, cache policy and robots
 headers -- both directions, since one careless line in `site/_headers` can put a
 `noindex` on `/share/*` or take one off `/social/*`.
 
@@ -167,9 +168,9 @@ from the tree.
 Link the icon set from `brand.ijosh.com`, and copy one file, `favicon.ico`, to your own
 site root. Browsers request `/favicon.ico` on the page's origin regardless of the tags,
 and Google reads ICO but not SVG, so that copy is the icon most likely to show beside
-your site in search results. It holds three sizes: the solid tile at 16 and 32, where the
+your site in search results. It holds the solid tile at 16 and 32, where the
 grey would not survive, and the two-tone tile at 48. A copy can drift, so a check that
-diffs it against `https://brand.ijosh.com/mark/favicon.ico` is worth the three lines.
+diffs it against `https://brand.ijosh.com/mark/favicon.ico` earns its keep.
 
 ```html
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -207,7 +208,7 @@ the scheme:
 </picture>
 ```
 
-The share image is already made and is four lines of markup: see
+The share image is already made, and is a few lines of markup: see
 [A share image](#a-share-image).
 
 The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`. Use
@@ -216,7 +217,7 @@ the name for `alt`, never "logo".
 ### A favicon, and nothing else
 
 Copy `https://brand.ijosh.com/mark/favicon.ico` to the site root. That covers a small
-site: three sizes, both tab themes, no markup. Add the full block above when the site
+site: every size it needs, both tab themes, no markup. Add the full block above when the site
 gains a manifest or gets installed.
 
 ### A git repository
@@ -237,7 +238,7 @@ Repositories that build something (ijosh.com, professional) link the same URLs.
 
 ### A resume
 
-Two files, both in the print greys, which hold up under laser toner and photocopying
+The resume marks are in the print greys, which hold up under laser toner and photocopying
 where the screen charcoal fills in. `mark/jshvn-mark-resume.pdf` is two-tone, `#414141`
 on `#999999`, for the mark beside the name. `mark/jshvn-mark-solid-resume.pdf` is the
 same ink in one tone, for icon size, where the lighter cells drop out. Each has an SVG
@@ -322,7 +323,7 @@ Discord asks for 680 x 240 at least, in 17:6, and only takes an image banner fro
 accounts. Its file is twice the minimum at the same ratio, so the crop step leaves it whole
 and a high-density screen gets every pixel.
 
-The avatar over the bottom left of all five is the photo, so the banner carries only the
+The avatar over the bottom left of each is the photo, so the banner carries only the
 mark. `social/` also holds `jshvn-social-preview-1280x640.png`, which is not a profile
 banner -- GitHub has none -- but the preview a repository unfurls with. See
 [A share image](#a-share-image).
@@ -371,8 +372,14 @@ back as an L.
 
 ### A terminal
 
-The solid form, drawn as five block characters on the grid. Do not approximate the grey
-with a dimmer color.
+The solid form, drawn on the grid with two block characters per cell, so a terminal's tall
+cells come out square. Do not approximate the grey with a dimmer color.
+
+```
+  ████
+██  ██
+██████
+```
 
 ## The palette
 
@@ -393,7 +400,7 @@ there at build time, as [Using the palette](#using-the-palette) describes.
 | `--btn-bg`, `--btn-fg` | `#1c1c1c`, `#ffffff` | `#f4f7fb`, `#14171c` | The one filled button and its label. |
 | `--mark`, `--mark-muted` | `#17191c`, `#666666` | `#f4f7fb`, `#9c9ea2` | The mark's two tones, read from `src/marks.mjs` so they cannot drift from the artwork. |
 
-The greys are the palette: a light or charcoal page, text in three weights, and the mark
+The greys are the palette: a light or charcoal page, text from strong to muted, and the mark
 in the tones for that surface. The accent is the only color, and it is deliberately rare
 so links stay findable and the mark stays quiet. The two mark tokens are for an inlined
 SVG or a mark drawn in CSS; every file in `mark/` already carries the tones.
@@ -417,15 +424,19 @@ table lacks, add it to `src/tokens.mjs` and run `task build`, so every consumer 
 **Keep the accent on links**, hover states and focus rings. Headings, borders, buttons
 and the mark stay grey.
 
+**Pills carry `--text`.** `--text-muted` over `--pill-bg` lands under WCAG AA. The build
+asserts a contrast ratio for every pair a reader actually sees, so a palette that fails AA
+never reaches a commit.
+
 ## Typography
 
-Three faces, one job and one weight each. They are the type ijosh.com sets.
+Each face has one job and one weight. They are the type ijosh.com sets.
 
 | Role | Face | Setting | For |
 |---|---|---|---|
 | **Display** | Montserrat 600 | Uppercase, untracked, line height 1 | The name, and headings |
 | **Label** | Graduate 400 | 14px, tracked 0.28em, line height 1 | One or two words: a role, a place, a tag |
-| **Text** | PT Serif 400 | 16px, tracked 0.01em, line height 1.4, in `--text-body` | Running text: a bio, a paragraph, a caption |
+| **Text** | PT Serif 400 | 16px, tracked 0.01em, line height 1.4, in `--text-body` | Running text: a bio, a paragraph. A caption is the same face in `--text-muted`. |
 
 On ijosh.com the name is Display, the role and place tiles are Labels, and the bio is Text.
 A geometric sans carries the name, a collegiate slab in capitals names what the person
@@ -449,7 +460,7 @@ monospace: `ui-monospace, SFMono-Regular, Menlo, monospace`.
 
 ### Setting the type
 
-- **Ask for the weight that ships.** Montserrat at 600, the other two at 400. The
+- **Ask for the weight that ships.** Montserrat at 600, Graduate and PT Serif at 400. The
   Montserrat file is variable, but declared at 600 it draws 600 whatever is asked for, so
   `font-weight: 700` renders the same and misstates the design.
 - **No bold, no italic.** Neither ships, and a browser fakes both badly. Set
@@ -539,8 +550,8 @@ sheet, a slide master, a CSS variable, a vendor's brand form.
 | A printed resume, at icon size | the white paper | `#414141` soft black | `#414141`, the same ink | `jshvn-mark-solid-resume.svg`, `.pdf` |
 | An app icon, favicon, or avatar | `#17191c` charcoal, drawn into the file | `#f4f7fb` off-white | `#9c9ea2` light grey | `jshvn-icon*.svg` |
 
-**The background** is the surface behind the mark. The mark files are transparent, so on
-the first three rows that color is yours to supply. The icons include their tile, so they
+**The background** is the surface behind the mark. The mark files are transparent, so
+wherever one of them is named that color is yours to supply. The icons include their tile, so they
 look the same on any page.
 
 The resume greys are softer than the screen tones on purpose. True near-black fills in
@@ -591,8 +602,8 @@ below it follows.
 
 ## Building
 
-`src/tokens.mjs` defines every color and every typeface. `src/marks.mjs` defines the grid and the drawing,
-and `src/social.mjs` and `src/share.mjs` place the mark on their canvases through it.
+`src/tokens.mjs` defines every color and every typeface. `src/marks.mjs` defines the grid
+and the drawing, and `src/social.mjs` and `src/share.mjs` place the mark on their canvases through it.
 Each module exports data, and `src/build.mjs` is the only thing that writes files: the
 SVGs and tokens.css, then the PNGs, the ICO, the PDFs, the photo ladder and the share
 image with librsvg and ImageMagick inside a pinned Alpine image. Outputs are committed,
@@ -608,10 +619,15 @@ half a picture is not a source anyone should be served.
 A redraw is an edit to `src/marks.mjs` and a `task build`.
 
 ```sh
-task          # the menu
-task build    # regenerate mark/, social/, share/ and tokens.css
-task check    # prove mark/, social/, share/ and photo/ match a fresh build, and fonts/ matches tokens.css
+task            # the menu
+task build      # regenerate mark/, social/, share/, photo/ and tokens.css
+task check      # prove the committed files match a fresh build, and the docs match the tree
+task check:docs # just the docs: every file and heading they name is there
+task check:urls # every file is served at the live origin, with the right headers
 ```
+
+A pull request runs `task check`, which covers the rebuild, the palette's contrast, `fonts/`
+and the docs. A push to `main` runs `task check:urls` once Cloudflare has deployed it.
 
 The host needs [go-task](https://taskfile.dev) and a container engine: Apple `container`
 on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check` forces one.

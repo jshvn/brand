@@ -1,5 +1,5 @@
-// The palette and the type. Every color in the artwork and on ijosh.com, and every face,
-// is defined here and nowhere else. Generates tokens.css, which the site imports.
+// The palette and the type: every color the mark and ijosh.com paint, and every face.
+// Generates tokens.css, which the site imports.
 
 // The mark's tones, as src/marks.mjs paints them.
 export const T = {
@@ -8,7 +8,7 @@ export const T = {
   resumeInk: '#414141', resumeGrey: '#999999',
 };
 
-// The banner field's four tones, an even ramp on charcoal. The brightest is the mark's own off-white.
+// The banner field's tones, an even ramp on charcoal. The brightest is the mark's own off-white.
 export const FIELD = [T.offwhite, '#a8adb5', '#767b82', '#4a4f56'];
 
 // The dark surface is the icon tile's charcoal and the dark text the mark's off-white.
@@ -20,7 +20,6 @@ const SITE = {
     '--text-muted': '#6b7280',
     '--text-body': '#4b5563',
     '--accent': '#ca486d',
-    '--pill-bg': 'rgba(51, 51, 51, 0.1)',
     '--btn-bg': '#1c1c1c',
     '--btn-fg': '#ffffff',
   },
@@ -31,7 +30,6 @@ const SITE = {
     '--text-muted': '#9aa7b4',
     '--text-body': '#c6d0da',
     '--accent': '#e98aa3',
-    '--pill-bg': 'rgba(255, 255, 255, 0.1)',
     '--btn-bg': T.offwhite,
     '--btn-fg': '#14171c',
   },
@@ -41,6 +39,41 @@ const MARK = {
   light: { '--mark': T.charcoal, '--mark-muted': T.mutedOnLight },
   dark: { '--mark': T.offwhite, '--mark-muted': T.mutedOnDark },
 };
+
+// A pill is the text color at a tenth over the page, so it needs no value of its own.
+const PILL = { light: ['#333333', 0.1], dark: ['#ffffff', 0.1] };
+const rgba = ([hex, a]) => `rgba(${channels(hex).join(', ')}, ${a})`;
+const overlay = ([hex, a], bg) =>
+  '#' + channels(hex).map((c, i) => Math.round(a * c + (1 - a) * channels(bg)[i]).toString(16).padStart(2, '0')).join('');
+
+// Contrast, as WCAG 2 defines it: relative luminance, lighter over darker.
+const channels = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+const luminance = hex =>
+  channels(hex)
+    .map(c => c / 255)
+    .map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+    .reduce((sum, c, i) => sum + [0.2126, 0.7152, 0.0722][i] * c, 0);
+export const contrast = (fg, bg) => {
+  const [light, dark] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
+  return (light + 0.05) / (dark + 0.05);
+};
+
+// What every scheme owes its reader: AA is 4.5 for text and 3 for a graphic. src/build.mjs asserts it.
+export const contrastPairs = Object.keys(SITE).flatMap(name => {
+  const c = SITE[name];
+  const pill = overlay(PILL[name], c['--bg']);
+  return [
+    [`${name}: a heading on the page`, c['--text'], c['--bg'], 4.5],
+    [`${name}: running text on the page`, c['--text-body'], c['--bg'], 4.5],
+    [`${name}: muted text on the page`, c['--text-muted'], c['--bg'], 4.5],
+    [`${name}: a link on the page`, c['--accent'], c['--bg'], 4.5],
+    [`${name}: a pill's text`, c['--text'], pill, 4.5],
+    [`${name}: a button's label`, c['--btn-fg'], c['--btn-bg'], 4.5],
+    [`${name}: an icon on the page`, c['--icon'], c['--bg'], 3],
+    [`${name}: the mark on the page`, MARK[name]['--mark'], c['--bg'], 3],
+    [`${name}: the mark's end cells`, MARK[name]['--mark-muted'], c['--bg'], 3],
+  ];
+});
 
 // Google's latin and latin-ext subsets. A browser fetches a file only for characters on the page.
 const LATIN = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD';
@@ -58,7 +91,7 @@ export const FACES = [
 export const fontFile = (family, weight, subset) =>
   `${family.toLowerCase().replace(/ /g, '-')}-${weight}-${subset}.woff2`;
 
-// Three roles, one face each. See "Typography" in README.md.
+// The roles, one face each. See "Typography" in README.md.
 const TYPE = {
   '--font-display': '"Montserrat", sans-serif',
   '--font-display-weight': '600',
@@ -87,7 +120,7 @@ const vars = (obj, pad) =>
 const scheme = (name, pad) =>
   [
     `${pad}color-scheme: ${name};`,
-    vars(SITE[name], pad),
+    vars({ ...SITE[name], '--pill-bg': rgba(PILL[name]) }, pad),
     `${pad}/* the mark on a ${name} surface */`,
     vars(MARK[name], pad),
   ].join('\n');

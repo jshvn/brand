@@ -1,0 +1,14 @@
+# The toolbox image and the workflows are pinned, so something has to say when a pin is old.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  # The Alpine digest. A major bump lands with the apk versions below it still pinned to the
+  # old release, so its pull request fails `task check` until they are moved with it.
+  - package-ecosystem: docker
+    directory: /docker
+    schedule:
+      interval: weekly
