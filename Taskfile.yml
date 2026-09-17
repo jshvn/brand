@@ -29,6 +29,8 @@ tasks:
           "${c}checks -- offline, changes nothing${r}" \
           "  task check                Rebuild into a temp dir and diff against the committed tree" \
           "                            ${d}a diff means a source changed and was not rebuilt${r}" \
+          "  task check:docs           Every file and heading the docs name is there" \
+          "                            ${d}runs inside task check too${r}" \
           "" \
           "${c}checks -- reaches the live origin${r}" \
           "  task check:urls           Every file in mark/, social/, share/, photo/ and fonts/ is served at {{.ORIGIN}}" \
@@ -49,7 +51,7 @@ tasks:
           ""
 
   check:
-    desc: Rebuild into a temp dir, diff it against the committed tree, and check the page's links
+    desc: Rebuild into a temp dir, diff it against the committed tree, and check the docs
     deps: [image]
     cmds:
       - rm -rf .build && mkdir -p .build
@@ -61,13 +63,14 @@ tasks:
       - diff -rq .build/share share
       - diff -rq .build/photo photo
       - diff .build/tokens.css tokens.css
-      # The page is hand-written and links generated files, so check every link resolves.
-      - |
-        fail=0
-        for f in $(grep -o '"/\(mark/\|social/\|share/\|photo/\|fonts/\|tokens\.css\)[^"]*"' site/index.html | tr -d '"' | sed 's|^/||' | sort -u); do
-          [ -e "$f" ] || { echo "index.html links /$f, which is not in the tree"; fail=1; }
-        done
-        exit "$fail"
+      - task: check:docs
+
+  check:docs:
+    desc: Fail if README.md or the index page names a file or heading that is not there
+    deps: [image]
+    cmds:
+      - task: run
+        vars: { CLI_ARGS: node src/check-docs.mjs }
 
   check:urls:
     desc: Assert every served file is at ORIGIN with the right headers

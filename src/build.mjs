@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { files as marks } from './marks.mjs';
 import { banners } from './social.mjs';
 import { share } from './share.mjs';
-import { css, FACES, fontFile } from './tokens.mjs';
+import { contrast, contrastPairs, css, FACES, fontFile } from './tokens.mjs';
 
 process.env.SOURCE_DATE_EPOCH = '0'; // cairo stamps PDFs with the wall clock otherwise
 const repo = fileURLToPath(new URL('..', import.meta.url));
@@ -30,6 +30,12 @@ writeFileSync(at('tokens.css'), css);
 // fonts/ is committed by hand, not built: it must hold exactly the files tokens.css names, and the license.
 const named = FACES.flatMap(f => Object.keys(f.subsets).map(sub => fontFile(f.family, f.weight, sub)));
 assert.deepEqual(readdirSync(join(repo, 'fonts')).sort(), [...named, 'OFL.txt'].sort(), 'fonts/ and tokens.css disagree');
+
+// No palette edit ships below WCAG AA. A pair that has to be an exception does not belong in the palette.
+for (const [what, fg, bg, min] of contrastPairs) {
+  const ratio = contrast(fg, bg);
+  assert(ratio >= min, `${what}: ${fg} on ${bg} is ${ratio.toFixed(2)}:1, under ${min}:1`);
+}
 
 const SIZES = {
   'jshvn-mark-on-light': [1024, 512], 'jshvn-mark-on-dark': [1024, 512],

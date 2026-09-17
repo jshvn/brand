@@ -1,0 +1,30 @@
+# After a push to main, assert the live origin serves every file with the right status,
+# content type, cache policy and robots headers. Nothing here builds: it is all curl.
+name: check-urls
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  urls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: go-task/setup-task@v2.2.0
+
+      # Cloudflare Pages reports no deployment to GitHub, so the check itself is the signal:
+      # a file added in this push 404s until the deploy lands. Retry until it does.
+      - name: Check the live origin, once the deploy has landed
+        run: |
+          for attempt in $(seq 1 19); do
+            if task check:urls; then exit 0; fi
+            echo "attempt ${attempt} failed; the deploy may still be in flight"
+            sleep 30
+          done
+          task check:urls
