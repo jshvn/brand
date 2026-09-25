@@ -106,7 +106,7 @@ print vendors. The icon tiles do not, since they are only for screens. See
 Cloudflare Pages builds `main` with `sh site/stage.sh` and serves the result at
 `brand.ijosh.com`. Paths mirror the tree: `mark/jshvn-icon.svg` is
 `https://brand.ijosh.com/mark/jshvn-icon.svg`. The root is an index page describing each
-file.
+file, and a path with no file is a 404 from `site/404.html`.
 
 Link to these URLs. Do not vendor the files, add this repository as a submodule, or link
 to GitHub. The exceptions are the files the intro names, which a site serves from its own
@@ -137,7 +137,8 @@ Worth knowing about the origin:
 `task check:urls` fetches `tokens.css` and every file in `mark/`, `social/`, `share/`,
 `photo/` and `fonts/` from the live origin and asserts status, content type, cache policy and robots
 headers -- both directions, since one careless line in `site/_headers` can put a
-`noindex` on `/share/*` or take one off `/social/*`.
+`noindex` on `/share/*` or take one off `/social/*`. It also asserts that a path with no
+file is a 404, not the index page.
 
 ## Using it
 

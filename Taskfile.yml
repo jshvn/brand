@@ -34,7 +34,7 @@ tasks:
           "" \
           "${c}checks -- reaches the live origin${r}" \
           "  task check:urls           Every file in mark/, social/, share/, photo/ and fonts/ is served at {{.ORIGIN}}" \
-          "                            ${d}status, content type, cache policy, robots; ORIGIN= to point elsewhere${r}" \
+          "                            ${d}status, content type, cache policy, robots, and a 404 for a missing path; ORIGIN= to point elsewhere${r}" \
           "" \
           "${c}build -- rewrites mark/, social/, share/ and photo/${r}" \
           "  task build                Regenerate mark/, social/ and share/, and photo/ from its master" \
@@ -73,7 +73,7 @@ tasks:
         vars: { CLI_ARGS: node src/check-docs.mjs }
 
   check:urls:
-    desc: Assert every served file is at ORIGIN with the right headers
+    desc: Assert every served file is at ORIGIN with the right headers, and a missing path is a 404
     silent: true
     env:
       ORIGIN: '{{.ORIGIN}}'
@@ -118,6 +118,10 @@ tasks:
         for f in $(find share -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         for f in $(find fonts -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
+        # Without site/404.html Pages answers a missing path with the index and a 200.
+        miss=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$ORIGIN/no-such-file" 2>/dev/null)
+        if [ "$miss" = 404 ]; then echo "ok   /no-such-file is a 404"
+        else echo "FAIL /no-such-file: status $miss, expected 404"; fail=1; fi
         [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
         exit "$fail"
 
