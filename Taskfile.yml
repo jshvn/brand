@@ -37,7 +37,7 @@ tasks:
         }
         note() { printf '  %-26s %s\n' '' "$d$1$r"; }
 
-        printf '\n%s   %s\n' "${b}brand${r}" "${d}the ijosh.com mark and every file other repos consume${r}"
+        printf '\n%s   %s\n' "${b}jshvn/brand${r}" "${d}the ijosh.com mark and every file other repos consume${r}"
 
         group read 'reaches the live origin, changes nothing'
         row 'task check:urls' 'Every file in mark/, social/, share/, photo/ and fonts/ is served' 'curls {{.ORIGIN}}; ORIGIN= to point elsewhere'
