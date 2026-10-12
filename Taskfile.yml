@@ -2,6 +2,9 @@
 # generated in the toolbox image (fonts/ excepted) and committed. Cloudflare Pages serves it at brand.ijosh.com.
 version: '3'
 
+set: [errexit, pipefail]
+silent: true
+
 vars:
   IMAGE: jshvn-brand
   ORIGIN: '{{.ORIGIN | default "https://brand.ijosh.com"}}'
@@ -17,41 +20,47 @@ vars:
 tasks:
   default:
     desc: Print the menu
-    silent: true
-    # ponytail: hand-maintained menu, since go-task can neither group nor annotate
+    # ponytail: hand-maintained listing -- go-task can neither group nor annotate, so a new
+    # task means a row below; menu-drift fails until it has one. `task --list` stays the
+    # generated view.
     cmds:
       - |
-        b=$(printf '\033[1m'); c=$(printf '\033[1;36m'); d=$(printf '\033[2m'); r=$(printf '\033[0m')
-        printf '%s\n' \
-          "" \
-          "${b}brand${r}   ${d}the ijosh.com mark and every file other repos consume${r}" \
-          "" \
-          "${c}checks -- offline, changes nothing${r}" \
-          "  task check                Rebuild into a temp dir and diff against the committed tree" \
-          "                            ${d}a diff means a source changed and was not rebuilt${r}" \
-          "  task check:docs           Every file and heading the docs name is there" \
-          "                            ${d}runs inside task check too${r}" \
-          "" \
-          "${c}checks -- reaches the live origin${r}" \
-          "  task check:urls           Every file in mark/, social/, share/, photo/ and fonts/ is served at {{.ORIGIN}}" \
-          "                            ${d}status, content type, cache policy, robots, and a 404 for a missing path; ORIGIN= to point elsewhere${r}" \
-          "" \
-          "${c}build -- rewrites mark/, social/, share/ and photo/${r}" \
-          "  task build                Regenerate mark/, social/ and share/, and photo/ from its master" \
-          "                            ${d}commit the result; consumers never run this${r}" \
-          "" \
-          "${c}site -- what Pages serves at brand.ijosh.com${r}" \
-          "  task site                 Stage the site into public/ (what the Pages build runs)" \
-          "  task site:serve           Stage, then serve public/ on http://localhost:8080" \
-          "" \
-          "${c}images -- the toolbox${r}" \
-          "  task image                Build the toolbox image ({{.IMAGE}}, {{.ENGINE}})" \
-          "  task run -- <cmd>         Run any command inside it with the repo mounted" \
-          "  task clean                Remove the image and any build scratch" \
-          ""
+        b= c= d= r=
+        if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+          b=$(printf '\033[1m'); c=$(printf '\033[1;36m'); d=$(printf '\033[2m'); r=$(printf '\033[0m')
+        fi
+        group() { printf '\n%s   %s\n' "$c$1$r" "$d$2$r"; }
+        row() {
+          if [ ${#1} -le 26 ]; then printf '  %-26s %s\n' "$1" "$2"
+          else printf '  %s\n  %-26s %s\n' "$1" '' "$2"; fi
+          [ -z "${3:-}" ] || note "$3"
+        }
+        note() { printf '  %-26s %s\n' '' "$d$1$r"; }
+
+        printf '\n%s   %s\n' "${b}jshvn/brand${r}" "${d}the ijosh.com mark and every file other repos consume${r}"
+
+        group read 'reaches the live origin, changes nothing'
+        row 'task check:urls' 'Every file in mark/, social/, share/, photo/ and fonts/ is served' 'curls {{.ORIGIN}}; ORIGIN= to point elsewhere'
+        note 'status, content type, cache policy, robots, and a 404 for a missing path'
+
+        group checks 'offline, changes nothing'
+        row 'task check' 'Rebuild into a temp dir and diff against the committed tree' 'a diff means a source changed and was not rebuilt'
+        note 'then check:docs and this menu against the tasks; what CI runs'
+        row 'task check:docs' 'Every file and heading the docs name is there' 'runs inside task check too'
+
+        group build 'rewrites mark/, social/, share/, photo/ and tokens.css, or stages public/'
+        row 'task build' 'Regenerate mark/, social/, share/ and tokens.css, and photo/ from its master' 'commit the result; consumers never run this'
+        row 'task site' 'Stage what Pages serves at brand.ijosh.com into public/' 'the same script the Pages build runs'
+        row 'task site:serve' 'Stage, then serve public/ on http://localhost:8080'
+
+        group toolbox '{{.ENGINE}}, {{.IMAGE}}, built from docker/'
+        row 'task image' 'Build it' 'image presence is the freshness check; a docker/Dockerfile edit needs task clean first'
+        row 'task run -- <cmd>' 'Run any command inside it with the repo mounted'
+        row 'task clean' 'Remove the image, public/ and any build scratch'
+        echo
 
   check:
-    desc: Rebuild into a temp dir, diff it against the committed tree, and check the docs
+    desc: Rebuild into a temp dir, diff it against the committed tree, check the docs and the menu
     deps: [image]
     cmds:
       - rm -rf .build && mkdir -p .build
@@ -64,6 +73,7 @@ tasks:
       - diff -rq .build/photo photo
       - diff .build/tokens.css tokens.css
       - task: check:docs
+      - task: menu-drift
 
   check:docs:
     desc: Fail if README.md or the index page names a file or heading that is not there
@@ -72,9 +82,23 @@ tasks:
       - task: run
         vars: { CLI_ARGS: node src/check-docs.mjs }
 
+  # Every public task has a desc and a menu row, and every row names a task. default and
+  # help are the menu itself. Needs task and jq wherever lint runs.
+  menu-drift:
+    internal: true
+    cmds:
+      - |
+        rows=$(grep -oE "row ['\"]task [^ '\"]+" '{{.ROOT_TASKFILE}}' | sed -E "s/^row ['\"]task //" || true)
+        bad=$(task -t '{{.ROOT_TASKFILE}}' --list-all --json --no-status | jq -r --arg rows "$rows" '
+          ($rows | split("\n") | map(select(. != ""))) as $r
+          | [.tasks[] | select(.task != "default" and .task != "help")] as $t
+          | ($t[] | select(.desc == "") | "task \(.task): no desc; describe it or mark it internal"),
+            ($t[] | select(.task | IN($r[]) | not) | "task \(.task): no row in the menu"),
+            ($r[] | select(IN($t[].task) | not) | "row task \(.): no such task")')
+        [ -z "$bad" ] || { printf '%s\n' "$bad" >&2; exit 1; }
+
   check:urls:
     desc: Assert every served file is at ORIGIN with the right headers, and a missing path is a 404
-    silent: true
     env:
       ORIGIN: '{{.ORIGIN}}'
     cmds:
@@ -119,7 +143,7 @@ tasks:
         for f in $(find photo -type f | sort); do probe "/$f" "$(type_for "$f")" yes noindex; done
         for f in $(find fonts -type f | sort); do probe "/$f" "$(type_for "$f")" yes none; done
         # Without site/404.html Pages answers a missing path with the index and a 200.
-        miss=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$ORIGIN/no-such-file" 2>/dev/null)
+        miss=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$ORIGIN/no-such-file" 2>/dev/null || true)
         if [ "$miss" = 404 ]; then echo "ok   /no-such-file is a 404"
         else echo "FAIL /no-such-file: status $miss, expected 404"; fail=1; fi
         [ "$fail" -eq 0 ] && echo "check:urls: every file served at $ORIGIN"
