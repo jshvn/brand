@@ -20,6 +20,10 @@ const PLATFORMS = {
   // 3:1 in a 150px strip, cover-fit: the 600px web column trims 62.5 top and bottom, a 360px
   // phone trims 150 per side. The avatar covers display x 10-104, y 104-150, so x < 497 below.
   bluesky: { w: 1500, h: 500, pitch: 60, at: [0.65, 0.45], safe: [497, 62.5, 1350, 437.5] },
+  // Desktop shows it at half size, 1240x260: the avatar covers x 60-460 and the name labels
+  // run along the top to about x 1000. Narrow windows and the app crop the sides to an
+  // unpublished width, so the safe region is the centre strip right of the labels.
+  soundcloud: { w: 2480, h: 520, pitch: 60, at: [0.50, 0.50], safe: [1000, 0, 1480, 520] },
   // GitHub's repo social preview. Link unfurls crop to 1.91:1, so the safe region is the centre.
   github: {
     w: 1280, h: 640, pitch: 72, at: [0.50, 0.50], safe: [64, 0, 1216, 640],

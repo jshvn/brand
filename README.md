@@ -54,6 +54,7 @@ repository is linked. Each is at the size its platform asks for.
 | **X** | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 | **Discord** | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
 | **Bluesky** | `social/jshvn-banner-bluesky-1500x500.png` | 1500 x 500 |
+| **SoundCloud** | `social/jshvn-banner-soundcloud-2480x520.png` | 2480 x 520 |
 | **GitHub** | `social/jshvn-social-preview-1280x640.png` | 1280 x 640 |
 
 A banner is the mark on a charcoal field patterned with the same grid, aligned so the
@@ -66,8 +67,9 @@ Upload the PNG. The SVG beside it is the source.
 
 The mark sits in a different place on each. The profile platforms overlay the
 avatar on the bottom left and crop the edges, X runs the name and bio along the bottom,
-Discord hangs the status bubble there, and Bluesky crops the top and bottom on the web
-and the sides on a phone, so each mark is placed in the region its
+Discord hangs the status bubble there, Bluesky crops the top and bottom on the web
+and the sides on a phone, and SoundCloud runs the name along the top beside the avatar and
+crops the sides on a narrow screen, so each mark is placed in the region its
 platform leaves clear. GitHub
 overlays nothing, but a repository link unfurls at 1.91:1, which takes the sides, so that
 mark is centred. Those regions are the `safe` entries in `src/social.mjs`, and the
@@ -155,7 +157,7 @@ from the tree.
 | Your own avatar, anywhere | The photo | [An avatar](#an-avatar) |
 | An avatar for something that is not a person | The icon, circle or rounded | [An avatar](#an-avatar) |
 | An email signature | The mark as a hosted PNG | [An email signature](#an-email-signature) |
-| A LinkedIn, Facebook, X, Discord or Bluesky profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
+| A LinkedIn, Facebook, X, Discord, Bluesky or SoundCloud profile banner | The banner for that platform | [A profile banner](#a-profile-banner) |
 | A link to ijosh.com, unfurling anywhere | The share image | [A share image](#a-share-image) |
 | A repository of mine, linked anywhere | The social preview | [A share image](#a-share-image) |
 | Type on a website | `tokens.css` and `fonts/`, copied to your site root | [Typography](#typography) |
@@ -285,7 +287,7 @@ Upload a raster; no platform accepts SVG.
 
 | Account | File |
 |---|---|
-| Personal (GitHub, LinkedIn, X, Bluesky, Facebook, Instagram, Discord, Slack) | `photo/profile-1024.jpg` |
+| Personal (GitHub, LinkedIn, X, Bluesky, Facebook, Instagram, Discord, SoundCloud, Slack) | `photo/profile-1024.jpg` |
 | Organization, circle crop | `mark/jshvn-icon-circle-1024.png` |
 | Organization, square or rounded crop | `mark/jshvn-icon-1024.png` |
 
@@ -319,6 +321,7 @@ and some strip `<picture>` entirely.
 | X, profile header | `social/jshvn-banner-x-1500x500.png` | 1500 x 500 |
 | Discord, profile banner | `social/jshvn-banner-discord-1360x480.png` | 1360 x 480 |
 | Bluesky, profile banner | `social/jshvn-banner-bluesky-1500x500.png` | 1500 x 500 |
+| SoundCloud, profile header | `social/jshvn-banner-soundcloud-2480x520.png` | 2480 x 520 |
 
 Discord asks for 680 x 240 at least, in 17:6, and only takes an image banner from Nitro
 accounts. Its file is twice the minimum at the same ratio, so the crop step leaves it whole
