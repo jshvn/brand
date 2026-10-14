@@ -217,8 +217,9 @@ The share image is already made, and is a few lines of markup: see
 [A share image](#a-share-image).
 
 The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`. Use
-the name for `alt`, never "logo". The one exception is [a credit line](#a-credit-line),
-where the name is the next word.
+the name for `alt`, never "logo". Leave it empty only where the mark is decoration: in
+[a credit line](#a-credit-line), where the name is the next word, and as the icon of a
+row, where the row's own text says what it is.
 
 ### A favicon, and nothing else
 
@@ -329,7 +330,9 @@ the baseline.
 ```
 
 If the resume goes through an applicant tracking system, keep the name as real text
-beside the mark. Parsers ignore the art.
+beside the mark. Parsers ignore the art. At icon size the mark is decoration, so give it
+an empty text layer, an empty `ActualText` as LaTeX's accsupp package sets one, and a
+parser reads the URL beside it alone.
 
 ### A business card
 
