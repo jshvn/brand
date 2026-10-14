@@ -30,7 +30,10 @@ const onDark = mark(T.offwhite, T.mutedOnDark);
 const TILE_RADIUS = 22; // percent of the tile, for the rounded app icon
 const INSET = 0.74; // the mark's share of a circle or maskable square
 
-const svg = inner => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${GRID.box} ${GRID.box}" role="img" aria-label="${NAME}">${inner}</svg>\n`;
+const svg = (inner, h = GRID.box) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${GRID.box} ${h}" role="img" aria-label="${NAME}">${inner}</svg>\n`;
+// The inline cut ends at the drawing's bottom edge, so an <img> in a line of text stands the J on the
+// baseline with no CSS. A README needs that: GitHub strips style attributes.
+const FOOT = P[2] + GRID.cell;
 const tile = (inner, rx) => `<rect width="${GRID.box}" height="${GRID.box}" rx="${rx}" fill="${T.charcoal}"/>${inner}`;
 const mid = GRID.box / 2;
 const inset = (inner, pct) => `<g transform="translate(${mid} ${mid}) scale(${pct}) translate(${-mid} ${-mid})">${inner}</g>`;
@@ -40,6 +43,8 @@ export const files = {
   'jshvn-mark-on-dark.svg':         svg(onDark),
   'jshvn-mark-solid-on-light.svg':  svg(solid(T.charcoal)),
   'jshvn-mark-solid-on-dark.svg':   svg(solid(T.offwhite)),
+  'jshvn-mark-solid-inline-on-light.svg': svg(solid(T.charcoal), FOOT),
+  'jshvn-mark-solid-inline-on-dark.svg':  svg(solid(T.offwhite), FOOT),
   'jshvn-mark-resume.svg':          svg(mark(T.resumeInk, T.resumeGrey)),
   'jshvn-mark-solid-resume.svg':    svg(solid(T.resumeInk)),
   // containers: the mark in a charcoal tile

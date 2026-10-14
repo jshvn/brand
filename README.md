@@ -34,6 +34,7 @@ It comes in two forms.
 |---|---|---|
 | **Mark** | `jshvn-mark-on-light.svg`, `jshvn-mark-on-dark.svg` | The primary form. Two tones. |
 | **Mark, solid** | `jshvn-mark-solid-on-light.svg`, `jshvn-mark-solid-on-dark.svg` | One tone. For anywhere the grey cannot be trusted. |
+| **Mark, solid, inline** | `jshvn-mark-solid-inline-on-light.svg`, `jshvn-mark-solid-inline-on-dark.svg` | The solid form cut flush below the J, so it stands on the baseline in a line of text. For [a credit line](#a-credit-line). |
 
 The icon tiles are each a charcoal square holding the on-dark mark.
 
@@ -101,7 +102,7 @@ license. See [Typography](#typography).
 
 The PNGs, the ICO and the PDFs in `mark/` are rendered from the SVGs, and the JPEGs in
 `photo/` from the master. Every mark form also ships as a PDF, for page layout, LaTeX and
-print vendors. The icon tiles do not, since they are only for screens. See
+print vendors. The icon tiles and the inline cut do not, since they are only for screens. See
 [Building](#building).
 
 ## Where it is served
@@ -153,6 +154,7 @@ from the tree.
 | A website, its favicons and its share image | The icon set, and the mark at 48px | [A website](#a-website) |
 | Nothing but a favicon | `favicon.ico`, one file | [A favicon, and nothing else](#a-favicon-and-nothing-else) |
 | A GitHub README, or a repo that builds | The mark at 112px | [A git repository](#a-git-repository) |
+| The last line of a project's site or README | The solid mark, inline, beside the name | [A credit line](#a-credit-line) |
 | A resume | The mark in the print greys | [A resume](#a-resume) |
 | A business card, or anything else printed | The mark, vector only | [A business card](#a-business-card) |
 | Your own avatar, anywhere | The photo | [An avatar](#an-avatar) |
@@ -216,7 +218,9 @@ The share image is already made, and is a few lines of markup: see
 [A share image](#a-share-image).
 
 The page's Content-Security-Policy needs `https://brand.ijosh.com` under `img-src`. Use
-the name for `alt`, never "logo".
+the name for `alt`, never "logo". Leave it empty only where the mark is decoration: in
+[a credit line](#a-credit-line), where the name is the next word, and as the icon of a
+row, where the row's own text says what it is.
 
 ### A favicon, and nothing else
 
@@ -241,6 +245,62 @@ viewers that do not resolve relative paths.
 A repository that builds a site, as ijosh.com does, links the same URLs. One that builds a
 PDF keeps a copy: see [A resume](#a-resume).
 
+### A credit line
+
+`Built by`, the solid mark, and the name, linked to ijosh.com. It is the last line of the
+footer on every public site of a project I built, and the last line of that project's
+README, once per page. A license sentence can come before it on the same line. It does
+not go on ijosh.com, where the whole page is the person, or in a fork of someone else's
+project.
+
+```html
+<p class="credit">MIT licensed. Built by <picture><source media="(prefers-color-scheme: dark)" srcset="https://brand.ijosh.com/mark/jshvn-mark-solid-inline-on-dark.svg"><img src="https://brand.ijosh.com/mark/jshvn-mark-solid-inline-on-light.svg" alt="" width="16"></picture>&nbsp;<a href="https://ijosh.com">Josh Vaughen</a>.</p>
+```
+
+```css
+/* Centres the J on the capitals: half the cap height, less half the drawing. */
+.credit img { vertical-align: calc(.35em - 5.44px); }
+```
+
+In a README, the same line in Markdown:
+
+```markdown
+MIT licensed. Built by <picture><source media="(prefers-color-scheme: dark)" srcset="https://brand.ijosh.com/mark/jshvn-mark-solid-inline-on-dark.svg"><img src="https://brand.ijosh.com/mark/jshvn-mark-solid-inline-on-light.svg" alt="" width="16"></picture>&nbsp;[Josh Vaughen](https://ijosh.com).
+```
+
+- **The file.** `jshvn-mark-solid-inline-on-light.svg` and `jshvn-mark-solid-inline-on-dark.svg`
+  are the solid form, cut flush below the J. An image in a line of text stands its bottom
+  edge on the baseline, so this file stands the J there. The square file would float it
+  2.6px above.
+- **The size.** 16px wide, the solid form's floor. Set width alone; the height follows
+  from the file. The drawing is then 10.9px tall, about the height of the capitals in text
+  from 12 to 18px, so set the line in that range.
+- **The alignment.** A page with CSS adds the `vertical-align` above, which puts the
+  middle of the J within a quarter pixel of the middle of the capitals at any size from 12
+  to 24px. `.35em` holds for the text faces here and the system faces, whose capitals are
+  0.68 to 0.72 of the size. A README gets no CSS, since GitHub strips it, and needs none:
+  at 14 to 16px the J lands within 0.7px of the same place. Do not reach for
+  `align="absmiddle"`, which centres on the lowercase and drops the J 1.4px.
+- **The spacing.** The mark sits outside the link, with a space before it and a no-break
+  space after it. Outside, because a link underlines the space after an image and Markdown
+  cannot set a margin. The no-break space keeps the mark on the name's line when the line
+  wraps.
+- **The `alt`.** Empty, because the name is the next word. A screen reader would
+  otherwise say the name twice.
+- **The color.** The mark keeps its ink when the text around it is muted or the link is
+  colored. Do not grey or tint it to match. See [Never](#never).
+
+Pick the file by the surface behind the line, which is not always the page's theme. A
+charcoal footer on a light page takes the on-dark file.
+
+| The page | The markup |
+|---|---|
+| Has one color scheme | One `<img>`, the file for that background |
+| Follows the system setting | The `<picture>` above |
+| Has its own theme switch | Two `<img>`, shown and hidden by the CSS that switches the page's colors. A `<source>` media query sees the system setting, not the switch. [brand.ijosh.com](https://brand.ijosh.com) is one. |
+| A README | The Markdown above. GitHub keeps the `<picture>` and follows the reader's GitHub theme. A renderer that ignores `<source>` shows the light file. |
+| Plain text, a terminal, a `--version` | The words alone: `Built by Josh Vaughen`, and the link where links work |
+
 ### A resume
 
 The resume marks are in the print greys, which hold up under laser toner and photocopying
@@ -255,7 +315,8 @@ Place the two-tone mark left of the name, sized so the drawing matches the name'
 height, with clear space between them. At icon size, in a contact row beside a URL or in
 a footer beside a page number, use the solid file and centre it on the cap band of the
 text beside it. Glyphs in such a row are centred, so a mark standing on the baseline sits
-too high once it is taller than the cap height.
+too high once it is taller than the cap height. In HTML, a 16px square file centres there
+with `vertical-align: calc(.35em - 8px)`: half the cap height, less half the box.
 
 Do not use the two-tone mark at icon size, and do not put the mark in both the header
 and the footer of one page.
@@ -273,7 +334,9 @@ the baseline.
 ```
 
 If the resume goes through an applicant tracking system, keep the name as real text
-beside the mark. Parsers ignore the art.
+beside the mark. Parsers ignore the art. At icon size the mark is decoration, so give it
+an empty text layer, an empty `ActualText` as LaTeX's accsupp package sets one, and a
+parser reads the URL beside it alone.
 
 ### A business card
 
@@ -572,7 +635,8 @@ stylesheet cannot drift from the artwork.
 
 ### Size and space
 
-- Clear space is one cell, 24 units, on every side.
+- Clear space is one cell, 24 units, on every side. In a line of text, a word space on
+  each side is the clear space: with the file's own margin, it is more than a cell.
 - Minimum size: mark 32px or 8mm, solid 16px or 4mm. The floor is about what survives
   reproduction, so it applies to screens, rasters and single-ink processes. Vector
   artwork in a PDF has no floor; the solid form prints clean at the cap height of the
@@ -645,3 +709,5 @@ on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check` for
 The mark and the photo are my own work, all rights reserved. The code is MIT, and that
 grant covers the code and not the design it draws. The fonts are under the SIL Open Font
 License. See [LICENSE.md](LICENSE.md).
+
+Built by <picture><source media="(prefers-color-scheme: dark)" srcset="mark/jshvn-mark-solid-inline-on-dark.svg"><img src="mark/jshvn-mark-solid-inline-on-light.svg" alt="" width="16"></picture>&nbsp;[Josh Vaughen](https://ijosh.com).
