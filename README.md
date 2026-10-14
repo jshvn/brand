@@ -13,7 +13,8 @@ This repository is the source of truth for the mark, the palette and the type. E
 in it is served at [brand.ijosh.com](https://brand.ijosh.com). Other repositories link to
 those URLs instead of keeping copies, so a change here is live everywhere within five
 minutes. The exceptions are `favicon.ico`, `tokens.css` and `fonts/`, which a site serves
-from its own origin and diffs against these URLs in a check.
+from its own origin, and the PDFs a LaTeX build embeds, since LaTeX cannot include a URL.
+Each copy is diffed against these URLs in a check.
 
 [What's here](#whats-here) - [Where it is served](#where-it-is-served) -
 [Using it](#using-it) - [The palette](#the-palette) - [Typography](#typography) -
@@ -111,8 +112,8 @@ Cloudflare Pages builds `main` with `sh site/stage.sh` and serves the result at
 file, and a path with no file is a 404 from `site/404.html`.
 
 Link to these URLs. Do not vendor the files, add this repository as a submodule, or link
-to GitHub. The exceptions are the files the intro names, which a site serves from its own
-origin and diffs against these URLs. Everything is cached for five minutes, so a change here reaches every consumer
+to GitHub. The exceptions are the copies the intro names, each diffed against these URLs in
+a check. Everything is cached for five minutes, so a change here reaches every consumer
 without a redeploy. Versioned paths with `immutable` caching were rejected: they would
 hand the update decision back to every consumer. Pages deploys every push to `main`; a
 tag and its release only record a version.
@@ -237,7 +238,8 @@ viewers that do not resolve relative paths.
 </p>
 ```
 
-Repositories that build something (ijosh.com, professional) link the same URLs.
+A repository that builds a site, as ijosh.com does, links the same URLs. One that builds a
+PDF keeps a copy: see [A resume](#a-resume).
 
 ### A resume
 
@@ -245,7 +247,9 @@ The resume marks are in the print greys, which hold up under laser toner and pho
 where the screen charcoal fills in. `mark/jshvn-mark-resume.pdf` is two-tone, `#414141`
 on `#999999`, for the mark beside the name. `mark/jshvn-mark-solid-resume.pdf` is the
 same ink in one tone, for icon size, where the lighter cells drop out. Each has an SVG
-beside it for a web or HTML-to-PDF resume.
+beside it for a web or HTML-to-PDF resume. LaTeX cannot include a URL, so a LaTeX resume keeps
+a copy of the PDF it uses, and a check diffs the copy against its URL. jshvn/professional
+does this with `task check:brand`.
 
 Place the two-tone mark left of the name, sized so the drawing matches the name's cap
 height, with clear space between them. At icon size, in a contact row beside a URL or in
