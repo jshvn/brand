@@ -704,6 +704,11 @@ and the docs. A push to `main` runs `task check:urls` once Cloudflare has deploy
 The host needs [go-task](https://taskfile.dev) and a container engine: Apple `container`
 on macOS when its daemon is up, otherwise Docker. `ENGINE=docker task check` forces one.
 
+Renovate keeps the pins current: `renovate.json` extends the shared `jshvn/renovate-config`
+preset, the Alpine digest and the actions are read as they are, and each apk version in
+`docker/Dockerfile` carries a comment naming its Alpine 3.24 package on Repology. An Alpine
+major is the one hand step: the package names in those comments move with it.
+
 ## License
 
 The mark and the photo are my own work, all rights reserved. The code is MIT, and that
